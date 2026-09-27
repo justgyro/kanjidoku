@@ -1,0 +1,10 @@
+# build_site.py
+pillow
+
+# optional, but without one of these the stroke page falls back to the page
+# counts written in strokes-body.html instead of reading them off the PDFs
+pymupdf
+
+# build_og.py only (the link-preview cards); the PNGs it makes are committed,
+# so this is only needed when the cards themselves change
+playwright

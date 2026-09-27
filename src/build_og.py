@@ -13,7 +13,10 @@ import sys
 from playwright.async_api import async_playwright
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-OUT = os.path.join(HERE, "..", "docs", "og")
+# The cards are a *source*: build_site.py clears docs/ on every run, so
+# anything generated straight into it vanishes the next time the site is
+# built without also re-rendering these.
+OUT = os.path.join(HERE, "og")
 
 STRAP = {
     "en": "Sudoku that leaves you with a word",

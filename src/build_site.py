@@ -402,21 +402,49 @@ def table_json(src, lang):
     return "{" + block.rstrip().rstrip(",") + "}"
 
 
-def supplement_rows(script):
-    """Write the download list into the markup, and read pages and size off
-    the PDFs rather than trusting numbers typed in by hand. The site can no
-    longer claim a page count the file does not have."""
-    import pymupdf
+def page_count(path, declared):
+    """How many pages the PDF really has.
 
+    Preferred over the number typed into strokes-body.html, so the page
+    cannot claim a count the file does not have. Both readers are optional,
+    though: without either the build still runs and falls back to the
+    declared value, loudly, rather than failing.
+    """
+    try:
+        import pymupdf
+        return len(pymupdf.open(path)), True
+    except ImportError:
+        pass
+    try:
+        from pypdf import PdfReader
+        return len(PdfReader(path).pages), True
+    except ImportError:
+        pass
+    return declared, False
+
+
+def supplement_rows(script):
+    """Write the download list into the markup, with pages and size taken
+    from the PDFs themselves."""
     block = script[script.index("const SUPPLEMENTS = ["):script.index("\n];")]
     rows = []
+    warned = False
     for obj in re.finditer(r"\{(.*?)\}", block, re.S):
         f = dict(re.findall(r'(\w+):\s*"((?:[^"\\]|\\.)*)"', obj.group(1)))
         name = f.get("file", "")
         if not name:
             continue
         path = os.path.join(HERE, "pdf", name)
-        pages = len(pymupdf.open(path))
+        declared = int(re.search(r"pages:\s*(\d+)", obj.group(1)).group(1))
+        pages, measured = page_count(path, declared)
+        if not measured:
+            if not warned:
+                print("  ! page counts not verified (install pymupdf or pypdf); "
+                      "using the numbers written in strokes-body.html")
+                warned = True
+        elif pages != declared:
+            print("  ! %s: strokes-body.html says %d pages, the file has %d "
+                  "— using %d" % (name, declared, pages, pages))
         mb = os.path.getsize(path) / 1048576
         rows.append(
             '  <div class="file">\n'
@@ -530,6 +558,12 @@ def build_extras():
 
     shutil.copytree(os.path.join(HERE, "img"), os.path.join(OUT, "img"),
                     dirs_exist_ok=True)
+
+    cards = os.path.join(HERE, "og")
+    if os.path.isdir(cards):
+        shutil.copytree(cards, os.path.join(OUT, "og"), dirs_exist_ok=True)
+    else:
+        print("  ! no src/og: run build_og.py, or link previews will 404")
 
 
 def main():
