@@ -1,0 +1,239 @@
+<title>Kanjidoku Stroke Order</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap">
+<style>
+__CORE_CSS__
+
+/* ---------- stroke-order page ---------- */
+.back{
+  display:inline-flex; align-items:center; gap:8px;
+  font-family:"Zen Kaku Gothic New",system-ui,sans-serif;
+  font-size:12px; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--muted); text-decoration:none; padding:6px 0;
+}
+.back:hover{color:var(--ink)}
+.back span{font-size:15px; line-height:1}
+
+.figrow{margin:30px 0 0; border-top:1px solid var(--rule); padding-top:20px}
+.figrow img{display:block; width:100%; height:auto}
+.figrow figcaption{
+  font-family:"Zen Kaku Gothic New",sans-serif; font-size:12px; font-weight:500;
+  letter-spacing:.06em; color:var(--muted); margin-top:12px;
+}
+.figrow figure{margin:0}
+
+.pair{display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-top:26px}
+.pair img{display:block; width:100%; height:auto; border:1px solid var(--rule); box-shadow:var(--shadow); background:#fff}
+.pair figcaption{
+  font-family:"Zen Kaku Gothic New",sans-serif; font-size:12px; font-weight:500;
+  letter-spacing:.06em; color:var(--muted); margin-top:10px;
+}
+.pair figure{margin:0}
+
+/* the download list */
+.files{margin-top:26px; border-top:2px solid var(--ink)}
+.file{
+  display:grid; grid-template-columns:minmax(0,1.15fr) auto auto;
+  gap:18px 28px; align-items:center;
+  padding:20px 0; border-bottom:1px solid var(--rule);
+}
+.file .who{min-width:0}
+.file h3{font-size:20px; margin:6px 0 2px; letter-spacing:-.01em}
+.file .meta{
+  font-family:"Zen Kaku Gothic New",sans-serif; font-size:13px; color:var(--muted);
+  font-variant-numeric:tabular-nums; margin:0;
+}
+.file .note{font-size:14.5px; color:var(--ink-soft); margin:8px 0 0; max-width:46ch}
+.file .size{
+  font-family:"Zen Kaku Gothic New",sans-serif; font-size:12px; font-weight:500;
+  letter-spacing:.08em; text-transform:uppercase; color:var(--muted);
+  font-variant-numeric:tabular-nums; white-space:nowrap;
+}
+.file .btn{white-space:nowrap}
+.file.soon{opacity:1}
+.file.soon .who h3{color:var(--muted)}
+
+.licence{
+  margin-top:44px; padding-top:26px; border-top:2px solid var(--ink);
+  max-width:66ch; display:grid; gap:14px;
+}
+.licence p:not(.label){font-size:17px; line-height:1.6; color:var(--ink-soft); margin:0}
+.licence .small{font-size:14px; color:var(--muted)}
+
+@media (max-width:860px){
+  .pair{grid-template-columns:1fr}
+  .file{grid-template-columns:1fr; gap:14px}
+  .file .size{order:3}
+  .file .btn{order:2; justify-self:start}
+}
+</style>
+
+<div class="wrap">
+  <header class="masthead">
+    <div class="topbar">
+      <div class="imprint"><span class="dot"></span> Mind Quests</div>
+      <a class="back" id="home" href="#"><span>&larr;</span> Kanjidoku</a>
+    </div>
+    <div>
+      <h1>Stroke order</h1>
+      <p class="strap">Every character in the book, big enough to read.</p>
+      <div class="ladder" aria-hidden="true">
+        <span style="background:var(--n5)"></span>
+        <span style="background:var(--n4)"></span>
+        <span style="background:var(--n3)"></span>
+        <span style="background:var(--n2)"></span>
+        <span style="background:var(--n1)"></span>
+      </div>
+    </div>
+  </header>
+</div>
+<hr class="rule">
+
+<div class="wrap">
+  <section>
+    <p class="label">Why this exists</p>
+    <h2 class="measure">Taken out of the books, so it could be big enough to use.</h2>
+    <p class="measure" style="color:var(--ink-soft)">The practice pages used to carry the stroke order themselves: a grey model in a small square, with a number at the start of every stroke. On paper those numbers came out about a millimetre tall, light grey on cream, and nobody was reading them.</p>
+    <p class="measure" style="color:var(--ink-soft)">Setting them larger inside the book was not the answer either, because on a dense character the numbers crowd each other rather than the page. So stroke order came out of the books altogether and was given a document of its own. The practice squares now hold a clean model to trace. The numbers live here, at 128pt, where every one of them can be read.</p>
+
+    <div class="figrow">
+      <figure>
+        <img src="__ROW_THREE__" alt="Three entries from the supplement: 学, 人 and 大, each drawn large with every stroke numbered, with level, stroke count, readings and meaning beneath.">
+        <figcaption>Three entries at actual proportions. Model, printed form, level, stroke count, readings with romaji, meaning.</figcaption>
+      </figure>
+    </div>
+  </section>
+</div>
+<hr class="rule">
+
+<div class="wrap">
+  <section>
+    <p class="label">What is in one</p>
+    <h2 class="measure">A reference, not a workbook.</h2>
+    <p class="measure" style="color:var(--ink-soft)">There are no tracing boxes. The books already have those, and repeating them here would double the page count for nothing. What this adds is every character in that volume, drawn once, large, with the order to draw it in, so you can look up anything you have met.</p>
+    <p class="measure" style="color:var(--ink-soft)">Three pages open it: how to read the diagrams and the two rules that cover most characters, then 言 built one stroke at a time, and the thing nobody tells beginners early enough, which is that the printed shape and the written shape are not quite the same. What changes is the shape of a mark, never the order, so the numbers hold either way.</p>
+    <p class="measure" style="color:var(--ink-soft)">Then the characters, nine to a page, easiest level first and within a level by how often it turns up in that book.</p>
+
+    <div class="pair">
+      <figure>
+        <img src="__WORKED__" alt="The worked-example page: 言 built one stroke at a time across seven frames, then printed and written forms compared.">
+        <figcaption>Page three: one character, seven strokes</figcaption>
+      </figure>
+      <figure>
+        <img src="__BODYPAGE__" alt="A body page of the supplement: nine characters in three columns, each drawn large with numbered strokes.">
+        <figcaption>A body page: nine characters, three columns</figcaption>
+      </figure>
+    </div>
+  </section>
+</div>
+<hr class="rule">
+
+<div class="wrap">
+  <section>
+    <p class="label">Download</p>
+    <h2 class="measure">One per volume. Free.</h2>
+    <p class="measure" style="color:var(--ink-soft)">8.5 × 11, the same trim as the books, with margins safe on any home printer. Pick the volume you are working through.</p>
+
+    <div class="files" id="files"></div>
+
+    <div class="licence">
+      <p class="label" style="margin:0">Using them</p>
+      <p><strong>Free to print and to share, whole and unmodified, including by teachers with a class.</strong> Not to be sold. If they are useful to somebody, pass them on.</p>
+      <p class="small">Models are set in the KanjiStrokeOrders font, used under its BSD-3 licence. Stroke counts come from KANJIDIC.</p>
+    </div>
+  </section>
+</div>
+
+<div class="wrap">
+  <footer>
+    <div>
+      <div class="mark">Mind Quests</div>
+      <p style="margin:8px 0 0">Puzzle books that leave you with something.</p>
+    </div>
+    <p style="margin:0">Kanjidoku © 2026 Mind Quests</p>
+  </footer>
+</div>
+
+<script>
+/* ------------------------------------------------------------------
+   Where the main site lives. On kanjidoku.net this becomes "/".
+------------------------------------------------------------------ */
+const HOME = "__HOME__";
+
+/* Each supplement. An empty url renders the row as still to come. */
+const SUPPLEMENTS = [
+  { key: "vol1", colour: "var(--n5)", volume: "Volume One", level: "JLPT N5 &amp; N4",
+    chars: 246, pages: 32, size: "0.6 MB",
+    file: "kanjidoku-vol1-N5.N4-strokes.pdf",
+    url: "https://drive.google.com/uc?export=download&id=1Kyln3gbkqRFbXM-W6co75t8LvYmIXv0o",
+    note: "The characters run in the same order as the writing practice at the back of the book, so the two can sit side by side." },
+
+  { key: "vol2", colour: "var(--n3)", volume: "Volume Two", level: "JLPT N3",
+    chars: 497, pages: 60, size: "1.1 MB",
+    file: "kanjidoku-vol2-N3-strokes.pdf",
+    url: "https://drive.google.com/uc?export=download&id=1MOS5dx91NwXFWHZrXZCEZvosL3FaUxXT",
+    note: "Every character in the book, including the easier ones carried over from Volume One, which the practice section does not drill." },
+
+  { key: "vol3", colour: "var(--n2)", volume: "Volume Three", level: "JLPT N2",
+    chars: 562, pages: 67, size: "1.2 MB",
+    file: "kanjidoku-vol3-N2-strokes.pdf",
+    url: "https://drive.google.com/uc?export=download&id=1V8A2eq-E0Z7LXIoQRBZyfHtIZ9alF59d",
+    note: "Every character in the book, including the earlier levels borrowed where a theme wanted one." },
+
+  { key: "vol4", colour: "var(--n1)", volume: "Volume Four", level: "JLPT N1",
+    chars: 705, pages: 83, size: "1.5 MB",
+    file: "kanjidoku-vol4-N1-strokes.pdf",
+    url: "https://drive.google.com/uc?export=download&id=14rVyFUEENf8OMvOy_RNR_uU0s4stmDXW",
+    note: "Volume Four has no writing-practice pages: it spent them on ten more puzzles. This is where its stroke orders live, and it is the volume this matters most to." },
+
+  { key: "kana", colour: "var(--kana)", volume: "Kanadoku", level: "Hiragana &amp; katakana",
+    chars: 92, pages: 16, size: "0.6 MB",
+    file: "kanadoku-strokes.pdf",
+    url: "https://drive.google.com/uc?export=download&id=1Oi67OBCMnzDk7z7aYTRdgufGqhANm3Hs",
+    note: "Every kana in both alphabets, with the marks that change a sound and the long bar. Kanadoku's own practice pages gave up their models, because at 40pt nobody could read the numbers." }
+];
+
+const list = document.getElementById("files");
+
+SUPPLEMENTS.forEach(function (s) {
+  const row = document.createElement("div");
+  row.className = "file" + (s.url ? "" : " soon");
+
+  const who = document.createElement("div");
+  who.className = "who";
+  const pages = s.pages ? s.pages + " pages · " : "";
+  who.innerHTML =
+    '<span class="lv"><i style="background:' + s.colour + '"></i> ' + s.volume + ' · ' + s.level + '</span>' +
+    '<h3>' + s.chars + ' characters</h3>' +
+    '<p class="meta">' + pages + (s.pages ? "8.5 × 11" : "in progress") + '</p>' +
+    '<p class="note">' + s.note + '</p>';
+  row.appendChild(who);
+
+  const size = document.createElement("div");
+  size.className = "size";
+  size.textContent = s.size;
+  row.appendChild(size);
+
+  if (s.url) {
+    const a = document.createElement("a");
+    a.className = "btn";
+    a.href = s.url;
+    a.target = "_blank";
+    a.rel = "noopener";
+    a.dataset.file = s.file;
+    a.textContent = "Download PDF";
+    row.appendChild(a);
+  } else {
+    const soon = document.createElement("span");
+    soon.className = "pending";
+    soon.innerHTML = "<i></i> Coming";
+    row.appendChild(soon);
+  }
+
+  list.appendChild(row);
+});
+
+const home = document.getElementById("home");
+if (HOME) home.href = HOME; else home.remove();
+</script>

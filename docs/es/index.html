@@ -1,0 +1,1109 @@
+<!doctype html>
+<html lang="es" data-lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kanjidoku — sudoku que te deja una palabra</title>
+<meta name="description" content="Sudoku jugado con kanji. Completa la cuadrícula, lee las casillas sombreadas en orden y deletrean una palabra japonesa real. Cuatro niveles JLPT y Kanadoku, con puzles de muestra gratis y guías de orden de trazos.">
+<link rel="canonical" href="https://kanjidoku.net/es/">
+<link rel="alternate" hreflang="en" href="https://kanjidoku.net/">
+<link rel="alternate" hreflang="es" href="https://kanjidoku.net/es/">
+<link rel="alternate" hreflang="it" href="https://kanjidoku.net/it/">
+<link rel="alternate" hreflang="ja" href="https://kanjidoku.net/ja/">
+<link rel="alternate" hreflang="x-default" href="https://kanjidoku.net/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Kanjidoku">
+<meta property="og:locale" content="es_ES">
+<meta property="og:title" content="Kanjidoku — sudoku que te deja una palabra">
+<meta property="og:description" content="Sudoku jugado con kanji. Completa la cuadrícula, lee las casillas sombreadas en orden y deletrean una palabra japonesa real. Cuatro niveles JLPT y Kanadoku, con puzles de muestra gratis y guías de orden de trazos.">
+<meta property="og:url" content="https://kanjidoku.net/es/">
+<meta property="og:image" content="https://kanjidoku.net/og/card-es.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Una cuadrícula de Kanjidoku con tres casillas sombreadas que deletrean 日本語.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#fcfbf8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#141519" media="(prefers-color-scheme: dark)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap">
+<style>
+:root{
+  --paper:#fcfbf8;
+  --raise:#ffffff;
+  --ink:#111111;
+  --ink-soft:#4a4842;
+  --muted:#77746b;
+  --rule:#dedbd3;
+  --rule-soft:#eceae4;
+  --shade:#f1efe9;
+  --n5:#3573bc; --n4:#45a099; --n3:#88c029; --n2:#fa9716; --n1:#eb2b92; --kana:#9d4bd7;
+  --n5-ink:#2a5b94; --n4-ink:#367c77; --n3-ink:#5c8320; --n2-ink:#b26708; --n1-ink:#cf1478;
+  --focus:#3573bc;
+  --shadow:0 1px 2px rgba(17,17,17,.05), 0 8px 24px -14px rgba(17,17,17,.28);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#141519; --raise:#1b1d22; --ink:#eeece6; --ink-soft:#bcb9b1; --muted:#8d8a82;
+    --rule:#33353c; --rule-soft:#25272d; --shade:#22242a;
+    --n5:#558dcf; --n4:#5ebab3; --n3:#a1d745; --n2:#fbad48; --n1:#ef5aaa; --kana:#aa5ce8;
+    --n5-ink:#8fb6e2; --n4-ink:#8ad1cb; --n3-ink:#b9e274; --n2-ink:#fcc47a; --n1-ink:#f487c1;
+    --focus:#8fb6e2;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -16px rgba(0,0,0,.8);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#141519; --raise:#1b1d22; --ink:#eeece6; --ink-soft:#bcb9b1; --muted:#8d8a82;
+  --rule:#33353c; --rule-soft:#25272d; --shade:#22242a;
+  --n5:#558dcf; --n4:#5ebab3; --n3:#a1d745; --n2:#fbad48; --n1:#ef5aaa; --kana:#aa5ce8;
+  --n5-ink:#8fb6e2; --n4-ink:#8ad1cb; --n3-ink:#b9e274; --n2-ink:#fcc47a; --n1-ink:#f487c1;
+  --focus:#8fb6e2;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -16px rgba(0,0,0,.8);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:"Source Serif 4","Iowan Old Style",Georgia,serif;
+  font-size:17px; line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+.jp,.disp,h1,h2,h3,.label,.btn,.spec{font-family:"Zen Kaku Gothic New","Hiragino Kaku Gothic ProN","Noto Sans JP",system-ui,sans-serif}
+
+.wrap{max-width:1000px; margin:0 auto; padding:0 28px}
+.measure{max-width:63ch}
+hr.rule{border:0; border-top:1px solid var(--rule); margin:0}
+section{padding:56px 0}
+
+.label{
+  font-size:11.5px; font-weight:700; letter-spacing:.16em; text-transform:uppercase;
+  color:var(--muted); margin:0 0 18px;
+}
+h1{font-size:clamp(40px,7.5vw,68px); font-weight:900; letter-spacing:-.02em; line-height:1.02; margin:0; text-wrap:balance}
+h2{font-size:clamp(24px,3.4vw,32px); font-weight:700; letter-spacing:-.015em; line-height:1.15; margin:0 0 14px; text-wrap:balance}
+h3{font-size:19px; font-weight:700; letter-spacing:-.01em; margin:0 0 6px}
+p{margin:0 0 16px}
+p:last-child{margin-bottom:0}
+strong{font-weight:600}
+a{color:inherit}
+a.inline{
+  color:inherit; text-decoration:underline; text-underline-offset:2px;
+  text-decoration-thickness:1px; text-decoration-color:var(--rule);
+}
+a.inline:hover{text-decoration-color:var(--ink)}
+
+/* ---------- masthead ---------- */
+.masthead{padding:34px 0 30px; display:flex; flex-direction:column; gap:22px}
+.imprint{display:flex; align-items:baseline; gap:10px; font-family:"Zen Kaku Gothic New",sans-serif;
+  font-size:11.5px; font-weight:700; letter-spacing:.2em; text-transform:uppercase; color:var(--muted)}
+.imprint .dot{width:5px;height:5px;border-radius:50%;background:var(--n2);display:inline-block;transform:translateY(-2px)}
+.title-row{display:flex; align-items:flex-end; gap:20px; flex-wrap:wrap}
+.strap{font-size:19px; font-style:italic; color:var(--ink-soft); margin:0}
+.ladder{display:flex; gap:4px; margin-top:4px}
+.ladder span{height:5px; width:44px; border-radius:2px}
+
+/* ---------- hero ---------- */
+.hero{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.05fr); gap:52px; align-items:center; padding:52px 0 60px}
+.gridfig{position:relative; width:100%; max-width:420px; margin:0 auto}
+.gridfig img{display:block; width:100%; height:auto; border:1px solid var(--rule)}
+.cell{
+  position:absolute; width:25%; height:25%;
+  display:grid; place-items:center;
+  font-family:"Zen Kaku Gothic New","Hiragino Kaku Gothic ProN",sans-serif;
+  font-weight:500; font-size:clamp(34px,7.6vw,74px); line-height:1; color:var(--n5-ink);
+  opacity:0; transform:translateY(6px);
+  animation:pop .5s cubic-bezier(.2,.7,.3,1) forwards;
+}
+.cell.c1{left:0;    top:50%; animation-delay:.35s}
+.cell.c2{left:75%;  top:25%; animation-delay:.75s}
+.cell.c3{left:75%;  top:75%; animation-delay:1.15s}
+@keyframes pop{to{opacity:1; transform:translateY(0)}}
+.reveal{
+  margin-top:26px; display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+  opacity:0; animation:pop .5s ease forwards; animation-delay:1.5s;
+}
+.reveal .word{font-family:"Zen Kaku Gothic New",sans-serif; font-size:34px; font-weight:700; letter-spacing:.04em}
+.reveal .gloss{font-size:15px; color:var(--muted); line-height:1.35}
+.reveal .gloss b{display:block; font-family:"Zen Kaku Gothic New",sans-serif; font-weight:500; font-size:14px; letter-spacing:.06em; color:var(--ink-soft)}
+@media (prefers-reduced-motion: reduce){
+  .cell,.reveal{animation:none; opacity:1; transform:none}
+}
+.hero-lede{font-size:20px; line-height:1.5}
+.hero-lede em{font-style:italic}
+
+/* ---------- steps ---------- */
+.steps{display:grid; grid-template-columns:repeat(3,1fr); gap:36px; counter-reset:s}
+.step{border-top:2px solid var(--ink); padding-top:14px}
+.step .num{font-family:"Zen Kaku Gothic New",sans-serif; font-size:12px; font-weight:700; letter-spacing:.14em; color:var(--muted); display:block; margin-bottom:8px}
+.step p{font-size:16px; color:var(--ink-soft)}
+
+/* ---------- books ---------- */
+.book{
+  display:grid; grid-template-columns:210px minmax(0,1fr); gap:34px;
+  padding:38px 0; border-top:1px solid var(--rule);
+}
+.book:first-of-type{border-top:2px solid var(--ink)}
+.book .art{position:relative}
+.book .art img{display:block; width:100%; height:auto; border:1px solid var(--rule)}
+.book .spineband{height:6px; width:100%; margin-bottom:12px; border-radius:2px}
+.book .art img.cover{box-shadow:var(--shadow); background:#fff}
+.lv{display:inline-flex; align-items:center; gap:7px; font-family:"Zen Kaku Gothic New",sans-serif;
+  font-size:11.5px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--muted)}
+.lv i{width:9px;height:9px;border-radius:2px;display:inline-block;font-style:normal}
+.book h3{font-size:26px; letter-spacing:-.015em; margin:8px 0 2px}
+.book .sub{font-size:15px; color:var(--muted); margin:0 0 14px}
+.book .pitch{font-size:16.5px; color:var(--ink-soft); max-width:56ch}
+.caveat{
+  font-size:14.5px; line-height:1.5; color:var(--muted); max-width:56ch;
+  border-left:2px solid var(--rule); padding-left:14px; margin:0 0 20px;
+}
+.spec{
+  display:flex; flex-wrap:wrap; gap:0; margin:18px 0 20px;
+  border-top:1px solid var(--rule-soft); border-bottom:1px solid var(--rule-soft);
+}
+.spec div{padding:11px 22px 11px 0; margin-right:22px; border-right:1px solid var(--rule-soft)}
+.spec div:last-child{border-right:0; margin-right:0; padding-right:0}
+.spec b{display:block; font-size:19px; font-weight:700; letter-spacing:-.01em; font-variant-numeric:tabular-nums}
+.spec span{font-size:11px; font-weight:500; letter-spacing:.12em; text-transform:uppercase; color:var(--muted)}
+.actions{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+
+.btn{
+  display:inline-flex; align-items:center; gap:8px;
+  font-size:14px; font-weight:700; letter-spacing:.01em;
+  padding:11px 18px; border-radius:3px; border:1.5px solid var(--ink);
+  background:var(--ink); color:var(--paper); cursor:pointer; text-decoration:none;
+  transition:transform .12s ease, background .12s ease;
+}
+.btn:hover{transform:translateY(-1px)}
+.btn.ghost{background:transparent; color:var(--ink)}
+.btn.ghost:hover{background:var(--shade)}
+.btn:focus-visible, a:focus-visible{outline:2px solid var(--focus); outline-offset:3px}
+.btn[disabled]{opacity:1; cursor:default; border-color:var(--rule); background:transparent; color:var(--muted); font-weight:500}
+.btn[disabled]:hover{transform:none}
+.pending{
+  display:inline-flex; align-items:center; gap:8px; font-family:"Zen Kaku Gothic New",sans-serif;
+  font-size:13px; font-weight:500; color:var(--muted); padding:11px 0;
+}
+.pending i{width:7px;height:7px;border-radius:50%;background:var(--rule);display:inline-block;font-style:normal}
+
+.book.pending-book{grid-template-columns:210px minmax(0,1fr)}
+.book.pending-book .art{display:grid; place-items:center; border:1px dashed var(--rule); background:var(--shade); aspect-ratio:1; border-radius:2px}
+.book.pending-book .art .kana{font-family:"Zen Kaku Gothic New",sans-serif; font-size:56px; font-weight:500; color:var(--muted); letter-spacing:.08em}
+
+.slim{display:flex; align-items:center; gap:16px; padding:26px 0; border-top:1px solid var(--rule); border-bottom:2px solid var(--ink); flex-wrap:wrap}
+.slim .lv{margin-right:auto}
+
+/* ---------- samples ---------- */
+.samples{display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-top:26px}
+.sample{
+  border:1px solid var(--rule); border-radius:3px; padding:18px; background:var(--raise);
+  display:flex; flex-direction:column; gap:10px; box-shadow:var(--shadow);
+}
+.sample .top{display:flex; align-items:center; gap:8px}
+.sample h3{font-size:16px; margin:0}
+.sample p{font-size:14px; color:var(--muted); line-height:1.45; margin:0; flex:1}
+.sample .btn{width:100%; justify-content:center}
+.sample.wide{grid-column:1/-1; flex-direction:row; align-items:center; gap:24px}
+.sample.wide .who{flex:1; min-width:0; display:flex; flex-direction:column; gap:10px}
+.sample.wide .who > *{margin:0}
+.sample.wide .btn{width:auto; flex:0 0 auto}
+.sample.wide .pending{flex:0 0 auto; padding:0}
+.dlnote{font-size:14px; color:var(--muted); margin-top:16px}
+
+/* ---------- inside ---------- */
+.inside{display:grid; grid-template-columns:repeat(4,1fr); gap:18px; align-items:start}
+.shot figure{margin:0}
+.shot img{display:block; width:100%; height:auto; border:1px solid var(--rule); box-shadow:var(--shadow); background:#fff}
+.shot figcaption{font-family:"Zen Kaku Gothic New",sans-serif; font-size:12px; font-weight:500; letter-spacing:.06em; color:var(--muted); margin-top:10px}
+.shot figcaption .foot{
+  display:block; margin-top:7px; padding-top:7px; border-top:1px solid var(--rule);
+  font-family:"Source Serif 4",Georgia,serif; font-size:12.5px; font-weight:400;
+  letter-spacing:0; line-height:1.42; font-style:italic;
+}
+
+/* ---------- proof ---------- */
+.proof{background:var(--shade); border-top:1px solid var(--rule); border-bottom:1px solid var(--rule)}
+.proof ul{list-style:none; padding:0; margin:22px 0 0; display:grid; grid-template-columns:repeat(3,1fr); gap:0 40px}
+.proof li{padding:14px 0; border-top:1px solid var(--rule); font-size:16px; color:var(--ink-soft)}
+.proof li b{font-family:"Zen Kaku Gothic New",sans-serif; font-weight:700; color:var(--ink); font-size:15px; display:block; margin-bottom:2px}
+.human{
+  margin-top:44px; padding:26px 0 0; border-top:2px solid var(--ink);
+  max-width:70ch; display:grid; gap:14px;
+}
+.human p:not(.label){font-size:18px; line-height:1.58; color:var(--ink-soft); margin:0}
+.human strong{color:var(--ink); font-weight:600}
+
+footer{padding:44px 0 60px; color:var(--muted); font-size:14px; display:flex; justify-content:space-between; gap:20px; flex-wrap:wrap; align-items:flex-end}
+footer .mark{font-family:"Zen Kaku Gothic New",sans-serif; font-weight:700; letter-spacing:.2em; text-transform:uppercase; font-size:11.5px; color:var(--ink)}
+
+@media (max-width:860px){
+  .hero{grid-template-columns:1fr; gap:34px; padding:34px 0 44px}
+  .steps{grid-template-columns:1fr; gap:24px}
+  .book,.book.pending-book{grid-template-columns:1fr; gap:22px}
+  .book .art{max-width:230px}
+  .samples{grid-template-columns:1fr 1fr}
+  .sample.wide{flex-direction:column; align-items:flex-start; gap:14px}
+  .inside{grid-template-columns:1fr 1fr}
+  .proof ul{grid-template-columns:1fr}
+  section{padding:44px 0}
+}
+/* ---------- language ---------- */
+.topbar{display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap}
+.langs{display:flex; gap:3px; align-items:center}
+.langs a,
+.langs button{
+  font-family:"Zen Kaku Gothic New","Hiragino Kaku Gothic ProN",system-ui,sans-serif;
+  font-size:12px; font-weight:700; letter-spacing:.08em;
+  padding:6px 10px; border:1px solid transparent; border-radius:3px;
+  background:transparent; color:var(--muted); cursor:pointer;
+  transition:color .12s ease, background .12s ease;
+}
+.langs a{text-decoration:none}
+.langs a:hover,
+.langs button:hover{color:var(--ink)}
+.langs a[aria-pressed="true"],
+.langs button[aria-pressed="true"]{color:var(--ink); background:var(--shade); border-color:var(--rule)}
+.langs a:focus-visible,
+.langs button:focus-visible{outline:2px solid var(--focus); outline-offset:2px}
+
+.langnote{
+  max-width:63ch; margin:18px 0 0; font-size:14.5px; line-height:1.5; color:var(--muted);
+  border-left:2px solid var(--rule); padding-left:14px;
+}
+.langnote:empty{display:none}
+
+/* Japanese: a gothic body face, looser leading, no italics, a narrower measure */
+:root[data-lang="ja"] body{
+  font-family:"Zen Kaku Gothic New","Hiragino Kaku Gothic ProN","Noto Sans JP",system-ui,sans-serif;
+  line-height:1.85;
+}
+:root[data-lang="ja"] h1,
+:root[data-lang="ja"] h2,
+:root[data-lang="ja"] h3{letter-spacing:.005em; line-height:1.3}
+:root[data-lang="ja"] h1{line-height:1.02}
+:root[data-lang="ja"] .strap,
+:root[data-lang="ja"] em,
+:root[data-lang="ja"] .shot figcaption .foot{font-style:normal}
+:root[data-lang="ja"] em{font-weight:700}
+:root[data-lang="ja"] .shot figcaption .foot{font-family:inherit}
+:root[data-lang="ja"] .measure,
+:root[data-lang="ja"] .langnote{max-width:40em}
+:root[data-lang="ja"] .book .pitch,
+:root[data-lang="ja"] .caveat{max-width:36em}
+:root[data-lang="ja"] .hero-lede{line-height:1.7}
+:root[data-lang="ja"] .spec span,
+:root[data-lang="ja"] .lv,
+:root[data-lang="ja"] .label{letter-spacing:.06em}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="masthead">
+    <div class="topbar">
+      <div class="imprint"><span class="dot"></span> Mind Quests</div>
+      <nav class="langs" id="langs" aria-label="Language">
+  <a href="/" data-lang="en" hreflang="en" title="English">EN</a>
+  <a href="/es/" data-lang="es" hreflang="es" title="Español">ES</a>
+  <a href="/it/" data-lang="it" hreflang="it" title="Italiano">IT</a>
+  <a href="/ja/" data-lang="ja" hreflang="ja" title="日本語">日本語</a>
+</nav>
+    </div>
+    <div>
+      <h1>Kanjidoku</h1>
+      <p class="strap" data-i18n="strap">Sudoku que te deja una palabra.</p>
+      <div class="ladder" aria-hidden="true">
+        <span style="background:var(--n5)"></span>
+        <span style="background:var(--n4)"></span>
+        <span style="background:var(--n3)"></span>
+        <span style="background:var(--n2)"></span>
+        <span style="background:var(--n1)"></span>
+      </div>
+    </div>
+  </header>
+</div>
+<hr class="rule">
+
+<div class="wrap">
+  <div class="hero">
+    <div>
+      <div class="gridfig">
+        <img src="/img/hero-v1.webp" width="720" height="720" alt="A four by four Kanjidoku grid, half filled, with three shaded cells numbered one to three.">
+        <span class="cell c1" aria-hidden="true">日</span>
+        <span class="cell c2" aria-hidden="true">本</span>
+        <span class="cell c3" aria-hidden="true">語</span>
+      </div>
+      <div class="reveal">
+        <span class="word">日本語</span>
+        <span class="gloss" data-i18n="hero.gloss"><b>にほんご &nbsp;nihongo</b>la lengua japonesa</span>
+      </div>
+    </div>
+    <div>
+      <p class="label" data-i18n="hero.label">La idea</p>
+      <h2 data-i18n="hero.h2">Resuelve el puzle. Quédate con la palabra.</h2>
+      <p class="hero-lede" data-i18n="hero.p1">Cada fila, cada columna y cada caja contiene cada carácter exactamente una vez: la regla del sudoku, intacta. No hace falta saber qué <em>significa</em> un carácter para resolver una cuadrícula. Un símbolo es un símbolo.</p>
+      <p data-i18n="hero.p2">Pero dos, tres o cuatro casillas empiezan sombreadas y vacías. Completa la cuadrícula, léelas en orden y deletrean una palabra japonesa real, formada con los caracteres que acabas de manejar durante veinte minutos. El puzle es la cerradura. El vocabulario es la recompensa.</p>
+      <p data-i18n="hero.p3">Nadie aprende un carácter mirándolo. Se aprende necesitándolo, nueve veces, en nueve sitios distintos, antes de que la cuadrícula se cierre.</p>
+    </div>
+  </div>
+</div>
+<hr class="rule">
+
+<div class="wrap">
+  <section>
+    <p class="label" data-i18n="steps.label">Cómo va un puzle</p>
+    <div class="steps">
+      <div class="step">
+        <span class="num" data-i18n="step1.num">Primero</span>
+        <h3 data-i18n="step1.h3">Lee la clave</h3>
+        <p data-i18n="step1.p">Cada carácter de la cuadrícula está impreso encima con sus lecturas, su significado y su romaji. Nunca tienes que volver una página para consultar algo.</p>
+      </div>
+      <div class="step">
+        <span class="num" data-i18n="step2.num">Después</span>
+        <h3 data-i18n="step2.h3">Cierra la cuadrícula</h3>
+        <p data-i18n="step2.p">Lógica pura, siempre. Ningún puzle de estos libros necesita adivinar, y ninguno exige una técnica más allá de los singles evidentes y ocultos.</p>
+      </div>
+      <div class="step">
+        <span class="num" data-i18n="step3.num">Por último</span>
+        <h3 data-i18n="step3.h3">Lee las casillas sombreadas</h3>
+        <p data-i18n="step3.p">En el orden numerado deletrean una palabra. Escríbela en el espacio previsto, junto con su lectura y su significado. Las soluciones están al final, así que arriésgate aunque no estés seguro.</p>
+      </div>
+    </div>
+  </section>
+</div>
+<hr class="rule">
+
+<div class="wrap">
+  <section>
+    <p class="label" data-i18n="series.label">La serie</p>
+    <h2 class="measure" data-i18n="series.h2">Cuatro volúmenes, una escalera.</h2>
+    <p class="measure" style="color:var(--ink-soft)" data-i18n="series.lede">La serie empieza en los niveles iniciales JLPT N5 y N4 y sube hasta N1, que recoge los 500 kanji más comunes de ese nivel. Así aprendes los kanji por orden de dificultad y, dentro de cada nivel, según la frecuencia con que aparecen de verdad. Si se tiene en cuenta que los 1.000 kanji más frecuentes, prácticamente los mismos 教育漢字 que aprenden los niños japoneses en primaria, cubren más del 90 % de su uso general, vas a avanzar mucho.</p>
+    <p class="measure" style="color:var(--ink-soft)" data-i18n="series.note">Los niveles salen de los datos de frecuencia de KANJIDIC, y cada libro lo dice en sus primeras páginas: el JLPT no publica una lista oficial de kanji desde 2010, así que toda lista en circulación es la reconstrucción de alguien.</p>
+    <p class="langnote" data-i18n="langnote">Los libros están escritos en inglés: los significados y las notas de cada carácter aparecen en inglés.</p>
+
+    <div class="book">
+      <div class="art">
+        <img class="cover" src="/img/cover-v1.webp" width="620" height="803" loading="lazy" decoding="async" alt="The cover of Kanjidoku Volume One: 100 kanji puzzles, JLPT N5 and N4.">
+      </div>
+      <div>
+        <span class="lv"><i style="background:var(--n5)"></i> <span data-i18n="b1.lv">Volumen Uno · JLPT N5 y N4</span></span>
+        <h3 data-i18n="b1.h3">Por donde se empieza</h3>
+        <p class="sub" data-i18n="b1.sub">Seis calentamientos de 4×4 abren el libro. Las cuadrículas crecen hasta 6×6, 8×8 y un 9×9 completo.</p>
+        <p class="pitch" data-i18n="b1.pitch">Ábrelo el primer día. Las cuadrículas de calentamiento no piden más que reconocer patrones, y cada carácter que necesitas está definido en la misma página. Al terminar habrás manejado los 246 caracteres de ambos niveles iniciales y habrás escrito cada uno varias veces.</p>
+        <div class="spec">
+          <div><b>100</b><span data-i18n="lbl.puzzles">Puzles</span></div>
+          <div><b>246</b><span data-i18n="lbl.kanji">Kanji</span></div>
+          <div><b>160</b><span data-i18n="lbl.pages">Páginas</span></div>
+          <div><b data-i18n="b1.squaresn">3.791</b><span data-i18n="b1.squares">Casillas por rellenar</span></div>
+        </div>
+        <div class="actions" data-book="vol1"><a class="btn" href="https://www.amazon.com/dp/B0HKYGP2TP" target="_blank" rel="noopener" data-i18n="btn.buy">Buy on Amazon</a> <a class="btn ghost" href="/samples/kanjidoku-vol1-N5.N4-sampler.pdf" data-i18n="btn.sample">Free sample puzzles</a></div>
+      </div>
+    </div>
+
+    <div class="book">
+      <div class="art">
+        <img class="cover" src="/img/cover-v2.webp" width="620" height="803" loading="lazy" decoding="async" alt="The cover of Kanjidoku Volume Two: 100 kanji puzzles, JLPT N3.">
+      </div>
+      <div>
+        <span class="lv"><i style="background:var(--n3)"></i> <span data-i18n="b2.lv">Volumen Dos · JLPT N3</span></span>
+        <h3 data-i18n="b2.h3">El nivel donde la gente lo deja</h3>
+        <p class="sub" data-i18n="b2.sub">Sin calentamientos. Las cuadrículas empiezan en 6×6 y llegan al 9×9 completo.</p>
+        <p class="pitch" data-i18n="b2.pitch">N3 es el muro intermedio. La gramática que te hacía sentir rápido ya quedó atrás, y lo que queda es vocabulario y kanji, que llegan despacio. Todos los consejos se reducen a más tarjetas. Esto son 4.101 casillas de escritura a mano que no se sienten como escritura a mano, y una cuadrícula terminada está terminada de un modo en que un mazo de tarjetas nunca lo está.</p>
+        <div class="spec">
+          <div><b>100</b><span data-i18n="lbl.puzzles">Puzzles</span></div>
+          <div><b>367</b><span data-i18n="b2.all">Kanji N3, todos</span></div>
+          <div><b>497</b><span data-i18n="lbl.indexed">Caracteres indexados</span></div>
+          <div><b>170</b><span data-i18n="lbl.pages">Pages</span></div>
+        </div>
+        <div class="actions" data-book="n3"><a class="btn" href="https://www.amazon.com/dp/B0HKYD525C" target="_blank" rel="noopener" data-i18n="btn.buy">Buy on Amazon</a> <a class="btn ghost" href="/samples/kanjidoku-vol2-N3-sampler.pdf" data-i18n="btn.sample">Free sample puzzles</a></div>
+      </div>
+    </div>
+
+    <div class="book">
+      <div class="art">
+        <img class="cover" src="/img/cover-v3.webp" width="620" height="803" loading="lazy" decoding="async" alt="The cover of Kanjidoku Volume Three: 100 kanji puzzles, JLPT N2.">
+      </div>
+      <div>
+        <span class="lv"><i style="background:var(--n2)"></i> <span data-i18n="b3.lv">Volumen Tres · JLPT N2</span></span>
+        <h3 data-i18n="b3.h3">El nivel que cuenta</h3>
+        <p class="sub" data-i18n="b3.sub">Menos casillas dadas que en cualquiera de los libros anteriores.</p>
+        <p class="pitch" data-i18n="b3.pitch">N5 es curiosidad y N3 es una meseta. N2 es el que las empresas nombran en una oferta de trabajo cuando contratan a extranjeros, y el que suspenden dos de cada tres candidatos. Trece de las cuadrículas esconden una expresión de cuatro caracteres. Ningún otro libro de pasatiempos de kanji lo hace, porque ninguno tiene un mecanismo capaz de sostenerla.</p>
+        <div class="spec">
+          <div><b>100</b><span data-i18n="lbl.puzzles">Puzzles</span></div>
+          <div><b>372</b><span data-i18n="b3.all">Kanji N2, todos</span></div>
+          <div><b>13</b><span data-i18n="lbl.phrases">Expresiones de cuatro caracteres</span></div>
+          <div><b>170</b><span data-i18n="lbl.pages">Pages</span></div>
+        </div>
+        <div class="actions" data-book="n2"><a class="btn" href="https://www.amazon.com/dp/B0HKY7G1JL" target="_blank" rel="noopener" data-i18n="btn.buy">Buy on Amazon</a> <a class="btn ghost" href="/samples/kanjidoku-vol3-N2-sampler.pdf" data-i18n="btn.sample">Free sample puzzles</a></div>
+      </div>
+    </div>
+
+    <div class="book">
+      <div class="art">
+        <img class="cover" src="/img/cover-v4.webp" width="620" height="803" loading="lazy" decoding="async" alt="The cover of Kanjidoku Volume Four: 110 kanji puzzles, JLPT N1.">
+      </div>
+      <div>
+        <span class="lv"><i style="background:var(--n1)"></i> <span data-i18n="b4.lv">Volumen Cuatro · JLPT N1</span></span>
+        <h3 data-i18n="b4.h3">El nivel que no es opcional</h3>
+        <p class="sub" data-i18n="b4.sub">110 puzles, los más de la serie, y sesenta de ellos cuadrículas de 9×9 con menos casillas dadas que en ningún otro punto de estos libros.</p>
+        <p class="pitch" data-i18n="b4.pitch">N2 es el nivel que nombran las empresas. N1 es el único que es un requisito y no una preferencia: un médico o una enfermera con licencia extranjera lo necesita antes de poder presentarse a los exámenes del propio Japón, y aprueban menos de tres de cada diez. Unos dos mil caracteres acumulados, que es donde aprender por desgaste deja de funcionar y necesitar un carácter empieza a importar.</p>
+        <div class="spec">
+          <div><b>110</b><span data-i18n="lbl.puzzles">Puzzles</span></div>
+          <div><b>500</b><span data-i18n="b4.top">Kanji N1 más frecuentes</span></div>
+          <div><b>705</b><span data-i18n="lbl.indexed">Indexed characters</span></div>
+          <div><b>164</b><span data-i18n="lbl.pages">Pages</span></div>
+        </div>
+        <p class="caveat" data-i18n="b4.caveat">En este no hay páginas de práctica de escritura. Da por hecho que ya sabes escribir y dedica esas páginas a diez puzles más. El trazado está en los volúmenes uno a tres. El orden de trazos de los 705 caracteres se puede <a class='inline' data-strokes href='#'>descargar gratis</a>.</p>
+        <div class="actions" data-book="n1"><a class="btn" href="https://www.amazon.com/dp/B0HKYD9RTV" target="_blank" rel="noopener" data-i18n="btn.buy">Buy on Amazon</a> <a class="btn ghost" href="/samples/kanjidoku-vol4-N1-sampler.pdf" data-i18n="btn.sample">Free sample puzzles</a></div>
+      </div>
+    </div>
+
+    <div class="book">
+      <div class="art">
+        <img class="cover" src="/img/cover-v5.webp" width="620" height="803" loading="lazy" decoding="async" alt="The cover of Kanadoku: 100 kana puzzles, all 92 hiragana and katakana.">
+      </div>
+      <div>
+        <span class="lv"><i style="background:var(--kana)"></i> <span data-i18n="kana.lv">Kanadoku · Antes de Kanjidoku</span></span>
+        <h3 data-i18n="kana.h3">El libro que va antes</h3>
+        <p class="sub" data-i18n="kana.sub">Hiragana, luego katakana, luego los dos a la vez.</p>
+        <p class="pitch" data-i18n="kana.pitch">¿Aún no quieres quitar los ruedines? Kanadoku te cubre. El mismo mecanismo jugado con kana, para quien todavía no ha visto un kanji. Empieza con hiragana y luego pasa a katakana. En la tercera parte llegan las cuadrículas que mezclan los dos silabarios, donde el valor es el sonido. Así que dos kana con el mismo sonido, como あ y ア, no pueden compartir fila.</p>
+        <div class="spec">
+          <div><b>100</b><span data-i18n="lbl.puzzles">Puzzles</span></div>
+          <div><b>92</b><span data-i18n="lbl.kana">Kana</span></div>
+          <div><b>3</b><span data-i18n="lbl.parts">Partes</span></div>
+          <div><b>153</b><span data-i18n="lbl.pages">Pages</span></div>
+        </div>
+        <div class="actions" data-book="kana"><a class="btn" href="https://www.amazon.com/dp/B0HL4ZLSV3" target="_blank" rel="noopener" data-i18n="btn.buy">Buy on Amazon</a> <a class="btn ghost" href="/samples/kanadoku-sampler.pdf" data-i18n="btn.sample">Free sample puzzles</a></div>
+      </div>
+    </div>
+
+  </section>
+</div>
+
+<div class="wrap">
+  <section>
+    <p class="label" data-i18n="free.label">Gratis</p>
+    <h2 class="measure" data-i18n="free.h2">Prueba cinco puzles de cualquiera de ellos.</h2>
+    <p class="measure" style="color:var(--ink-soft)" data-i18n="free.lede">Cada muestra son doce páginas sacadas directamente del libro terminado: cómo se juega, el mecanismo de la palabra escondida explicado sobre una cuadrícula real, cinco puzles que suben desde la cuadrícula más pequeña hasta un 9×9 completo, la solución y la nota de cada uno de esos cinco, y una página de práctica de escritura. El del Volumen Cuatro son once: ese libro no tiene práctica de escritura que mostrar. Imprímela y resuélvela. No se te pide nada a cambio.</p>
+
+    <div class="samples">
+      <div class="sample">
+        <div class="top"><span class="lv"><i style="background:var(--n5)"></i> N5 &amp; N4</span></div>
+        <h3 data-i18n="s1.h3">Muestra del Volumen Uno</h3>
+        <p data-i18n="s1.p">Un calentamiento de 4×4, un 6×6, un jigsaw de 5×5 y dos 9×9 completos. Abre con la cuadrícula que deletrea 日本語 y cierra con 試験.</p>
+        <a class="btn ghost" href="/samples/kanjidoku-vol1-N5.N4-sampler.pdf" data-i18n="btn.dl">Descargar PDF</a>
+      </div>
+      <div class="sample">
+        <div class="top"><span class="lv"><i style="background:var(--n3)"></i> N3</span></div>
+        <h3 data-i18n="s2.h3">Muestra del Volumen Dos</h3>
+        <p data-i18n="s2.p">Un 6×6, un jigsaw de 7×7, un 8×8 y dos cuadrículas de 9×9, cerrando con 初舞台.</p>
+        <a class="btn ghost" href="/samples/kanjidoku-vol2-N3-sampler.pdf" data-i18n="btn.dl">Download PDF</a>
+      </div>
+      <div class="sample">
+        <div class="top"><span class="lv"><i style="background:var(--n2)"></i> N2</span></div>
+        <h3 data-i18n="s3.h3">Muestra del Volumen Tres</h3>
+        <p data-i18n="s3.p">Un 6×6, un jigsaw de 7×7, un 8×8 y dos 9×9 completos, incluida la cuadrícula cuyas cuatro casillas sombreadas esconden 四捨五入.</p>
+        <a class="btn ghost" href="/samples/kanjidoku-vol3-N2-sampler.pdf" data-i18n="btn.dl">Download PDF</a>
+      </div>
+      <div class="sample">
+        <div class="top"><span class="lv"><i style="background:var(--n1)"></i> N1</span></div>
+        <h3 data-i18n="s4.h3">Muestra del Volumen Cuatro</h3>
+        <p data-i18n="s4.p">Un 6×6, un 8×8, un jigsaw de 7×7 y dos 9×9 completos, incluida la cuadrícula que esconde 新幹線.</p>
+        <a class="btn ghost" href="/samples/kanjidoku-vol4-N1-sampler.pdf" data-i18n="btn.dl">Download PDF</a>
+      </div>
+      <div class="sample wide">
+        <div class="who">
+          <div class="top"><span class="lv"><i style="background:var(--kana)"></i> <span data-i18n="s5.lv">Kana</span></span></div>
+          <h3 data-i18n="s5.h3">Muestra de Kanadoku</h3>
+          <p data-i18n="s5.p">Un 4×4 de apertura, un jigsaw de 5×5, un 6×6 y dos 9×9 completos: uno todo en katakana y otro mezclando los dos silabarios. Cierra con こんにちは.</p>
+        </div>
+        <a class="btn ghost" href="/samples/kanadoku-sampler.pdf" data-i18n="btn.dl">Download PDF</a>
+      </div>
+    </div>
+    <p class="langnote" data-i18n="strokes.line">Las guías de orden de trazos también son gratuitas, una por volumen: cada carácter del libro dibujado en grande, con el orden en que se traza. <a class="inline" data-strokes href="#">Aquí están</a>.</p>
+  </section>
+</div>
+<hr class="rule">
+
+<div class="wrap">
+  <section>
+    <p class="label" data-i18n="inside.label">Por dentro</p>
+    <h2 class="measure" data-i18n="inside.h2">Un puzle por página, y un final de libro que sirve.</h2>
+    <p class="measure" style="color:var(--ink-soft)" data-i18n="inside.lede">Las dos quejas que aparecen una y otra vez en las reseñas de cuadernos de kanji son que no hay índice y que no hay guía de orden de trazos. Todos los volúmenes indexan cada carácter que contienen. El orden de trazos, que antes iba apretado en las casillas de práctica, tiene ahora un documento propio y gratuito, uno por volumen, donde se puede leer de verdad.</p>
+    <div class="inside" style="margin-top:28px">
+      <div class="shot"><figure><img src="/img/page-puzzle.webp" width="760" height="984" loading="lazy" decoding="async" alt="A puzzle page: the character key with readings and meanings above an eight by eight grid."><figcaption data-i18n="cap1">Una página de puzle: clave, cuadrícula, casillas de respuesta</figcaption></figure></div>
+      <div class="shot"><figure><img src="/img/page-solutions.webp" width="520" height="673" loading="lazy" decoding="async" alt="A solutions page: three solved grids beside notes on each hidden word."><figcaption data-i18n="cap2">Soluciones, con una nota sobre cada palabra</figcaption></figure></div>
+      <div class="shot"><figure><img src="/img/page-index.webp" width="520" height="673" loading="lazy" decoding="async" alt="A page of the kanji index listing characters with readings and puzzle numbers."><figcaption data-i18n="cap3">El índice: cada carácter, cada puzle</figcaption></figure></div>
+      <div class="shot"><figure><img src="/img/page-practice.webp" width="520" height="673" loading="lazy" decoding="async" alt="A writing practice page with numbered stroke-order models to trace."><figcaption data-i18n="cap4">Práctica de escritura, con un modelo para calcar<span class="foot">Solo en los volúmenes uno a tres. El volumen cuatro no tiene sección de práctica: dedica esas páginas a diez puzles más. El orden de trazos de cada carácter de cada volumen se puede <a class='inline' data-strokes href='#'>descargar gratis</a>.</span></figcaption></figure></div>
+    </div>
+  </section>
+</div>
+
+<section class="proof">
+  <div class="wrap">
+    <p class="label" data-i18n="proof.label">Por qué puedes fiarte de las cuadrículas</p>
+    <h2 class="measure" data-i18n="proof.h2">Aquí no se dejó nada al azar.</h2>
+    <p class="measure" style="color:var(--ink-soft)" data-i18n="proof.lede">Cada cuadrícula se demuestra antes de llegar a la página. Tres de esas garantías son las que de verdad se notan al resolver.</p>
+    <ul>
+      <li data-i18n="proof.li1"><b>Una sola solución, siempre</b>Hay exactamente una manera de completar cada cuadrícula, y siempre se llega por lógica. Ningún puzle de ningún volumen necesita adivinar.</li>
+      <li data-i18n="proof.li2"><b>Cada palabra escondida es real</b>Cada palabra de las casillas sombreadas es una que el japonés usa de verdad, impresa con la lectura que realmente lleva, igual que todas las lecturas de todas las claves de caracteres.</li>
+      <li data-i18n="proof.li3"><b>Ningún compuesto dos veces</b>Ninguna palabra escondida se repite como solución dentro de un volumen. Cien puzles son cien palabras distintas con las que salir.</li>
+    </ul>
+
+    <div class="human">
+      <p class="label" style="margin-bottom:12px" data-i18n="human.label">Hecho por alguien que echó las horas</p>
+      <p data-i18n="human.p1">Quien lo creó vivió doce años en Japón y habla el idioma con fluidez. Lo que también significa doce años sabiendo exactamente cómo se siente: caracteres buscados infinidad de veces que siguen sin quedarse, una pared empapelada de fichas de kanji escritas a mano, el punto en el que un libro de texto deja de ayudar y pasa a ser mobiliario.</p>
+      <p data-i18n="human.p2">Esa es toda la razón de que estos libros funcionen como funcionan. Una cuadrícula nunca te pide memorizar nada. Te pide <em>usar</em> un carácter hasta que el puzle se cierre, y luego te entrega una palabra por las molestias.</p>
+      <p data-i18n="human.p3">Es un complemento estupendo para el resto de tus materiales de estudio. Por eso se pone al lado de tu libro de texto en vez de competir con él, y por eso hay quien termina uno y empieza otro.</p>
+    </div>
+  </div>
+</section>
+
+<div class="wrap">
+  <footer>
+    <div>
+      <div class="mark">Mind Quests</div>
+      <p style="margin:8px 0 0" data-i18n="footer.tag">Libros de puzles que te dejan algo.</p>
+    </div>
+    <p style="margin:0">Kanjidoku © 2026 Mind Quests</p>
+  </footer>
+</div>
+<script>
+/* ------------------------------------------------------------------
+   Translations. English is the markup itself and is cached on load,
+   so only the other three languages are listed here. A key that is
+   missing from a language falls back to the English in the page.
+------------------------------------------------------------------ */
+const LANGS = [
+  { code: "en", label: "EN",   name: "English" },
+  { code: "es", label: "ES",   name: "Español" },
+  { code: "it", label: "IT",   name: "Italiano" },
+  { code: "ja", label: "日本語", name: "日本語" }
+];
+
+const EN_MARKUP = {
+  "strap": "Sudoku that leaves you with a word.",
+  "hero.gloss": "<b>にほんご &nbsp;nihongo</b>the Japanese language",
+  "hero.label": "The whole idea",
+  "hero.h2": "Solve the puzzle. Keep the word.",
+  "hero.p1": "Every row, every column and every box holds each character exactly once: the sudoku rule, unchanged. You don't need to know what a character <em>means</em> to solve a grid. A symbol is a symbol.",
+  "hero.p2": "But two, three or four cells start shaded and empty. Fill the grid, read them in order, and they spell a real Japanese word built from the characters you have just spent twenty minutes with. The puzzle is the lock. The vocabulary is the reward.",
+  "hero.p3": "Nobody learns a character by looking at it. You learn it by needing it, nine times, in nine different places, before the grid will close.",
+  "steps.label": "How a puzzle goes",
+  "step1.num": "First",
+  "step1.h3": "Read the key",
+  "step1.p": "Every character in the grid is printed above it with its readings, its meaning and romaji. You never turn back a page to look something up.",
+  "step2.num": "Then",
+  "step2.h3": "Close the grid",
+  "step2.p": "Pure logic, every time. No puzzle in any of these books needs a guess, and none needs a technique beyond naked and hidden singles.",
+  "step3.num": "Finally",
+  "step3.h3": "Read the shaded cells",
+  "step3.p": "In numbered order, they spell a word. Write it in the space provided, along with its reading and its meaning. You can always check the solution in the back, so give it a guess if you are not sure.",
+  "series.label": "The series",
+  "series.h2": "Four volumes, one ladder.",
+  "series.lede": "The series starts at the beginner JLPT N5 and N4 levels and builds up to N1, which covers the 500 commonest kanji at that level. So you learn kanji in order of difficulty, and within a level by how often they actually turn up. Considering that the top 1,000 kanji, much the same set as the 教育漢字 Japanese children learn in elementary school, cover over 90% of their general usage, you’ll cover a lot of ground.",
+  "series.note": "Levels are drawn from KANJIDIC's frequency data, and each book says so in its front matter: the JLPT has published no official kanji list since 2010, so every list in circulation is somebody's reconstruction.",
+  "langnote": "",
+  "b1.lv": "Volume One · JLPT N5 &amp; N4",
+  "b1.h3": "Where you start",
+  "b1.sub": "Six 4×4 warm-ups open the book. Grids grow to 6×6, 8×8 and a full 9×9.",
+  "b1.pitch": "Open it on day one. The warm-up grids ask nothing but pattern matching, and every character you need is defined on the page in front of you. By the end you have handled all 246 characters of both beginner levels, and written each of them out multiple times.",
+  "lbl.puzzles": "Puzzles",
+  "lbl.kanji": "Kanji",
+  "lbl.pages": "Pages",
+  "b1.squaresn": "3,791",
+  "b1.squares": "Squares to fill",
+  "b2.lv": "Volume Two · JLPT N3",
+  "b2.h3": "The level where people stop",
+  "b2.sub": "No warm-ups. Grids open at 6×6 and run to a full 9×9.",
+  "b2.pitch": "N3 is the intermediate wall. The grammar that made you feel fast is behind you, and what is left is vocabulary and kanji, arriving slowly. Every piece of advice amounts to more flashcards. This is 4,101 squares of handwriting that do not feel like handwriting, and a finished grid is finished in a way a deck never is.",
+  "b2.all": "N3 kanji, all of them",
+  "lbl.indexed": "Indexed characters",
+  "b3.lv": "Volume Three · JLPT N2",
+  "b3.h3": "The level that counts",
+  "b3.sub": "Fewer given squares than either book before it.",
+  "b3.pitch": "N5 is curiosity and N3 is a plateau. N2 is the one employers name in a job posting when they hire from abroad, and the level two out of three candidates fail. Thirteen of the grids hide a four-character phrase. No other kanji puzzle book does that, because none of them has a mechanic that could carry one.",
+  "b3.all": "N2 kanji, all of them",
+  "lbl.phrases": "Four-character phrases",
+  "b4.lv": "Volume Four · JLPT N1",
+  "b4.h3": "The level that is not optional",
+  "b4.sub": "110 puzzles, the most in the series, and sixty of them full 9×9 grids at the leanest given counts anywhere in these books.",
+  "b4.pitch": "N2 is the level employers name. N1 is the only one that is a requirement rather than a preference: a doctor or a nurse licensed abroad needs it before they are allowed to sit Japan's own examinations, and fewer than three in ten who take it pass. Around two thousand characters, cumulative, which is where learning by attrition stops working and needing a character starts to matter.",
+  "b4.top": "Commonest N1 kanji",
+  "b4.caveat": "No writing-practice pages in this one. It assumes you can already write, and spends those pages on ten more puzzles instead. The tracing is in Volumes One to Three. The stroke orders for all 705 characters are <a class='inline' data-strokes href='#'>free to download</a>.",
+  "kana.lv": "Kanadoku · Before Kanjidoku",
+  "kana.h3": "The book that comes first",
+  "kana.sub": "Hiragana, then katakana, then both at once.",
+  "kana.pitch": "Not ready to take off the training wheels just yet? Kanadoku's got you covered. The same mechanic played with kana, for a reader who has not met a kanji yet. Start with hiragana, then move on to katakana. In the third part, move on to grids that mix both scripts; the value being the sound. Meaning kana with the same sound, like あ and ア, cannot share a row.",
+  "lbl.kana": "Kana",
+  "lbl.parts": "Parts",
+  "free.label": "Free",
+  "free.h2": "Try five puzzles from any of them.",
+  "free.lede": "Every sampler is twelve pages taken straight from the finished book: how to play, the hidden-word mechanic worked through on a real grid, five puzzles that climb from the smallest grid to a full 9×9, the solution and the note for each of those five, and a page of writing practice. Volume Four’s runs to eleven, since that book has no writing practice to sample. Print it and solve it. Nothing is asked of you in return.",
+  "s1.h3": "Volume One sampler",
+  "s1.p": "A 4×4 warm-up, a 6×6, a 5×5 jigsaw and two full 9×9s. It opens on the grid that spells 日本語 and closes on 試験.",
+  "btn.dl": "Download PDF",
+  "s2.h3": "Volume Two sampler",
+  "s2.p": "A 6×6, a 7×7 jigsaw, an 8×8 and two full 9×9 grids, closing on 初舞台.",
+  "s3.h3": "Volume Three sampler",
+  "s3.p": "A 6×6, a 7×7 jigsaw, an 8×8 and two full 9×9s, including the grid whose four shaded cells hide 四捨五入.",
+  "s4.h3": "Volume Four sampler",
+  "s4.p": "A 6×6, an 8×8, a 7×7 jigsaw and two full 9×9s, including the grid that hides 新幹線.",
+  "s5.lv": "Kana",
+  "s5.h3": "Kanadoku sampler",
+  "s5.p": "A 4×4 opener, a 5×5 jigsaw, a 6×6 and two full 9×9s: one all katakana, one mixing both scripts. It closes on こんにちは.",
+  "strokes.line": "Stroke-order references are free too, one per volume: every character in the book drawn large, with the order to draw it in. <a class='inline' data-strokes href='#'>Get them here</a>.",
+  "inside.label": "Inside",
+  "inside.h2": "One puzzle to a page, and a proper back of the book.",
+  "inside.lede": "The two complaints that come up again and again in reviews of kanji workbooks are that there is no index and no stroke-order guide. Every volume indexes every character it contains. Stroke order used to be squeezed into the practice squares; it now has a free document of its own, one per volume, where it can actually be read.",
+  "cap1": "A puzzle page: key, grid, answer strip",
+  "cap2": "Solutions, with a note on every word",
+  "cap3": "The index: every character, every puzzle",
+  "cap4": "Writing practice, a model to trace<span class=\"foot\">Volumes One to Three only. Volume Four has no practice section: it spends those pages on ten more puzzles. Stroke orders for every character in every volume are <a class='inline' data-strokes href='#'>free to download</a>.</span>",
+  "proof.label": "Why the grids can be trusted",
+  "proof.h2": "Nothing here was left to chance.",
+  "proof.lede": "Every grid is proved before it reaches a page. Three of those promises are the ones you actually feel while solving.",
+  "proof.li1": "<b>One solution, always</b>There is exactly one way to fill each grid, and you can always reach it by logic. No puzzle in any volume needs a guess.",
+  "proof.li2": "<b>Every hidden word is real</b>Each shaded-cell word is one Japanese actually uses, printed with the reading it actually takes, and so is every reading in every character key.",
+  "proof.li3": "<b>No compound twice</b>No hidden word is used as a solution more than once in a volume. A hundred puzzles means a hundred different words to walk away with.",
+  "human.label": "Made by someone who did the hours",
+  "human.p1": "The creator lived in Japan for twelve years and is fluent in the language. Which also means twelve years of knowing exactly how it feels: characters looked up countless times that still will not stick, a wall plastered with handwritten kanji index cards, the point where a textbook stops being a help and starts being furniture.",
+  "human.p2": "That is the whole reason these books work the way they do. A grid never asks you to memorise anything. It asks you to <em>use</em> a character until the puzzle closes, then hands you a word for your trouble.",
+  "human.p3": "It makes for a great supplement to your other learning materials. Which is why it sits alongside your textbook rather than competing with it, and why people finish one and start another.",
+  "footer.tag": "Puzzle books that leave you with something."
+};
+
+const STRINGS = {
+  en: {
+    "btn.buy": "Buy on Amazon",
+    "btn.soon": "<i></i> Coming to Amazon",
+    "btn.sample": "Free sample puzzles",
+    "btn.unavailable": "Sample unavailable here",
+    "ui.preparing": "Preparing…",
+    "ui.saved": "Saved",
+    "ui.noSave": "Saving files isn’t available in this view. Open the link in a web browser and the download will work.",
+    "ui.rate": "One download at a time. Try that again in a moment.",
+    "ui.fail": "That download didn’t go through. Try again, or ask me for the file directly."
+  },
+
+  es: {
+    "strap": "Sudoku que te deja una palabra.",
+    "hero.gloss": "<b>にほんご &nbsp;nihongo</b>la lengua japonesa",
+    "hero.label": "La idea",
+    "hero.h2": "Resuelve el puzle. Quédate con la palabra.",
+    "hero.p1": "Cada fila, cada columna y cada caja contiene cada carácter exactamente una vez: la regla del sudoku, intacta. No hace falta saber qué <em>significa</em> un carácter para resolver una cuadrícula. Un símbolo es un símbolo.",
+    "hero.p2": "Pero dos, tres o cuatro casillas empiezan sombreadas y vacías. Completa la cuadrícula, léelas en orden y deletrean una palabra japonesa real, formada con los caracteres que acabas de manejar durante veinte minutos. El puzle es la cerradura. El vocabulario es la recompensa.",
+    "hero.p3": "Nadie aprende un carácter mirándolo. Se aprende necesitándolo, nueve veces, en nueve sitios distintos, antes de que la cuadrícula se cierre.",
+    "steps.label": "Cómo va un puzle",
+    "step1.num": "Primero",
+    "step1.h3": "Lee la clave",
+    "step1.p": "Cada carácter de la cuadrícula está impreso encima con sus lecturas, su significado y su romaji. Nunca tienes que volver una página para consultar algo.",
+    "step2.num": "Después",
+    "step2.h3": "Cierra la cuadrícula",
+    "step2.p": "Lógica pura, siempre. Ningún puzle de estos libros necesita adivinar, y ninguno exige una técnica más allá de los singles evidentes y ocultos.",
+    "step3.num": "Por último",
+    "step3.h3": "Lee las casillas sombreadas",
+    "step3.p": "En el orden numerado deletrean una palabra. Escríbela en el espacio previsto, junto con su lectura y su significado. Las soluciones están al final, así que arriésgate aunque no estés seguro.",
+    "series.label": "La serie",
+    "series.h2": "Cuatro volúmenes, una escalera.",
+    "series.lede": "La serie empieza en los niveles iniciales JLPT N5 y N4 y sube hasta N1, que recoge los 500 kanji más comunes de ese nivel. Así aprendes los kanji por orden de dificultad y, dentro de cada nivel, según la frecuencia con que aparecen de verdad. Si se tiene en cuenta que los 1.000 kanji más frecuentes, prácticamente los mismos 教育漢字 que aprenden los niños japoneses en primaria, cubren más del 90 % de su uso general, vas a avanzar mucho.",
+    "series.note": "Los niveles salen de los datos de frecuencia de KANJIDIC, y cada libro lo dice en sus primeras páginas: el JLPT no publica una lista oficial de kanji desde 2010, así que toda lista en circulación es la reconstrucción de alguien.",
+    "langnote": "Los libros están escritos en inglés: los significados y las notas de cada carácter aparecen en inglés.",
+    "b1.lv": "Volumen Uno · JLPT N5 y N4",
+    "b1.h3": "Por donde se empieza",
+    "b1.sub": "Seis calentamientos de 4×4 abren el libro. Las cuadrículas crecen hasta 6×6, 8×8 y un 9×9 completo.",
+    "b1.pitch": "Ábrelo el primer día. Las cuadrículas de calentamiento no piden más que reconocer patrones, y cada carácter que necesitas está definido en la misma página. Al terminar habrás manejado los 246 caracteres de ambos niveles iniciales y habrás escrito cada uno varias veces.",
+    "b1.squaresn": "3.791",
+    "b1.squares": "Casillas por rellenar",
+    "b2.lv": "Volumen Dos · JLPT N3",
+    "b2.h3": "El nivel donde la gente lo deja",
+    "b2.sub": "Sin calentamientos. Las cuadrículas empiezan en 6×6 y llegan al 9×9 completo.",
+    "b2.pitch": "N3 es el muro intermedio. La gramática que te hacía sentir rápido ya quedó atrás, y lo que queda es vocabulario y kanji, que llegan despacio. Todos los consejos se reducen a más tarjetas. Esto son 4.101 casillas de escritura a mano que no se sienten como escritura a mano, y una cuadrícula terminada está terminada de un modo en que un mazo de tarjetas nunca lo está.",
+    "b2.all": "Kanji N3, todos",
+    "b3.lv": "Volumen Tres · JLPT N2",
+    "b3.h3": "El nivel que cuenta",
+    "b3.sub": "Menos casillas dadas que en cualquiera de los libros anteriores.",
+    "b3.pitch": "N5 es curiosidad y N3 es una meseta. N2 es el que las empresas nombran en una oferta de trabajo cuando contratan a extranjeros, y el que suspenden dos de cada tres candidatos. Trece de las cuadrículas esconden una expresión de cuatro caracteres. Ningún otro libro de pasatiempos de kanji lo hace, porque ninguno tiene un mecanismo capaz de sostenerla.",
+    "b3.all": "Kanji N2, todos",
+    "b4.lv": "Volumen Cuatro · JLPT N1",
+    "b4.h3": "El nivel que no es opcional",
+    "b4.sub": "110 puzles, los más de la serie, y sesenta de ellos cuadrículas de 9×9 con menos casillas dadas que en ningún otro punto de estos libros.",
+    "b4.pitch": "N2 es el nivel que nombran las empresas. N1 es el único que es un requisito y no una preferencia: un médico o una enfermera con licencia extranjera lo necesita antes de poder presentarse a los exámenes del propio Japón, y aprueban menos de tres de cada diez. Unos dos mil caracteres acumulados, que es donde aprender por desgaste deja de funcionar y necesitar un carácter empieza a importar.",
+    "b4.top": "Kanji N1 más frecuentes",
+    "b4.caveat": "En este no hay páginas de práctica de escritura. Da por hecho que ya sabes escribir y dedica esas páginas a diez puzles más. El trazado está en los volúmenes uno a tres. El orden de trazos de los 705 caracteres se puede <a class='inline' data-strokes href='#'>descargar gratis</a>.",
+    "kana.lv": "Kanadoku · Antes de Kanjidoku",
+    "kana.h3": "El libro que va antes",
+    "kana.sub": "Hiragana, luego katakana, luego los dos a la vez.",
+    "kana.pitch": "¿Aún no quieres quitar los ruedines? Kanadoku te cubre. El mismo mecanismo jugado con kana, para quien todavía no ha visto un kanji. Empieza con hiragana y luego pasa a katakana. En la tercera parte llegan las cuadrículas que mezclan los dos silabarios, donde el valor es el sonido. Así que dos kana con el mismo sonido, como あ y ア, no pueden compartir fila.",
+    "kana.pending": "<i></i> En desarrollo",
+    "lbl.puzzles": "Puzles",
+    "lbl.kanji": "Kanji",
+    "lbl.pages": "Páginas",
+    "lbl.indexed": "Caracteres indexados",
+    "lbl.phrases": "Expresiones de cuatro caracteres",
+    "lbl.kana": "Kana",
+    "lbl.parts": "Partes",
+    "free.label": "Gratis",
+    "free.h2": "Prueba cinco puzles de cualquiera de ellos.",
+    "free.lede": "Cada muestra son doce páginas sacadas directamente del libro terminado: cómo se juega, el mecanismo de la palabra escondida explicado sobre una cuadrícula real, cinco puzles que suben desde la cuadrícula más pequeña hasta un 9×9 completo, la solución y la nota de cada uno de esos cinco, y una página de práctica de escritura. El del Volumen Cuatro son once: ese libro no tiene práctica de escritura que mostrar. Imprímela y resuélvela. No se te pide nada a cambio.",
+    "s1.h3": "Muestra del Volumen Uno",
+    "s1.p": "Un calentamiento de 4×4, un 6×6, un jigsaw de 5×5 y dos 9×9 completos. Abre con la cuadrícula que deletrea 日本語 y cierra con 試験.",
+    "s2.h3": "Muestra del Volumen Dos",
+    "s2.p": "Un 6×6, un jigsaw de 7×7, un 8×8 y dos cuadrículas de 9×9, cerrando con 初舞台.",
+    "s3.h3": "Muestra del Volumen Tres",
+    "s3.p": "Un 6×6, un jigsaw de 7×7, un 8×8 y dos 9×9 completos, incluida la cuadrícula cuyas cuatro casillas sombreadas esconden 四捨五入.",
+    "s4.h3": "Muestra del Volumen Cuatro",
+    "s4.p": "Un 6×6, un 8×8, un jigsaw de 7×7 y dos 9×9 completos, incluida la cuadrícula que esconde 新幹線.",
+    "s5.lv": "Kana",
+    "s5.h3": "Muestra de Kanadoku",
+    "s5.p": "Un 4×4 de apertura, un jigsaw de 5×5, un 6×6 y dos 9×9 completos: uno todo en katakana y otro mezclando los dos silabarios. Cierra con こんにちは.",
+    "btn.coming": "<i></i> Próximamente",
+    "btn.dl": "Descargar PDF",
+    "inside.label": "Por dentro",
+    "inside.h2": "Un puzle por página, y un final de libro que sirve.",
+    "inside.lede": "Las dos quejas que aparecen una y otra vez en las reseñas de cuadernos de kanji son que no hay índice y que no hay guía de orden de trazos. Todos los volúmenes indexan cada carácter que contienen. El orden de trazos, que antes iba apretado en las casillas de práctica, tiene ahora un documento propio y gratuito, uno por volumen, donde se puede leer de verdad.",
+    "cap1": "Una página de puzle: clave, cuadrícula, casillas de respuesta",
+    "cap2": "Soluciones, con una nota sobre cada palabra",
+    "cap3": "El índice: cada carácter, cada puzle",
+    "cap4": "Práctica de escritura, con un modelo para calcar<span class=\"foot\">Solo en los volúmenes uno a tres. El volumen cuatro no tiene sección de práctica: dedica esas páginas a diez puzles más. El orden de trazos de cada carácter de cada volumen se puede <a class='inline' data-strokes href='#'>descargar gratis</a>.</span>",
+    "proof.label": "Por qué puedes fiarte de las cuadrículas",
+    "proof.h2": "Aquí no se dejó nada al azar.",
+    "proof.lede": "Cada cuadrícula se demuestra antes de llegar a la página. Tres de esas garantías son las que de verdad se notan al resolver.",
+    "proof.li1": "<b>Una sola solución, siempre</b>Hay exactamente una manera de completar cada cuadrícula, y siempre se llega por lógica. Ningún puzle de ningún volumen necesita adivinar.",
+    "proof.li2": "<b>Cada palabra escondida es real</b>Cada palabra de las casillas sombreadas es una que el japonés usa de verdad, impresa con la lectura que realmente lleva, igual que todas las lecturas de todas las claves de caracteres.",
+    "proof.li3": "<b>Ningún compuesto dos veces</b>Ninguna palabra escondida se repite como solución dentro de un volumen. Cien puzles son cien palabras distintas con las que salir.",
+    "human.label": "Hecho por alguien que echó las horas",
+    "human.p1": "Quien lo creó vivió doce años en Japón y habla el idioma con fluidez. Lo que también significa doce años sabiendo exactamente cómo se siente: caracteres buscados infinidad de veces que siguen sin quedarse, una pared empapelada de fichas de kanji escritas a mano, el punto en el que un libro de texto deja de ayudar y pasa a ser mobiliario.",
+    "human.p2": "Esa es toda la razón de que estos libros funcionen como funcionan. Una cuadrícula nunca te pide memorizar nada. Te pide <em>usar</em> un carácter hasta que el puzle se cierre, y luego te entrega una palabra por las molestias.",
+    "human.p3": "Es un complemento estupendo para el resto de tus materiales de estudio. Por eso se pone al lado de tu libro de texto en vez de competir con él, y por eso hay quien termina uno y empieza otro.",
+    "strokes.line": "Las guías de orden de trazos también son gratuitas, una por volumen: cada carácter del libro dibujado en grande, con el orden en que se traza. <a class=\"inline\" data-strokes href=\"#\">Aquí están</a>.",
+    "footer.tag": "Libros de puzles que te dejan algo.",
+    "btn.buy": "Comprar en Amazon",
+    "btn.soon": "<i></i> Próximamente en Amazon",
+    "btn.sample": "Puzles de muestra gratis",
+    "btn.unavailable": "Muestra no disponible aquí",
+    "ui.preparing": "Preparando…",
+    "ui.saved": "Guardado",
+    "ui.noSave": "Esta vista no permite guardar archivos. Abre el enlace en un navegador web y la descarga funcionará.",
+    "ui.rate": "Una descarga cada vez. Inténtalo otra vez en un momento.",
+    "ui.fail": "Esa descarga no salió. Inténtalo de nuevo o pídeme el archivo directamente."
+  },
+
+  it: {
+    "strap": "Sudoku che ti lascia una parola.",
+    "hero.gloss": "<b>にほんご &nbsp;nihongo</b>la lingua giapponese",
+    "hero.label": "L’idea",
+    "hero.h2": "Risolvi lo schema. Tieniti la parola.",
+    "hero.p1": "Ogni riga, ogni colonna e ogni riquadro contiene ciascun carattere esattamente una volta: la regola del sudoku, intatta. Non serve sapere che cosa <em>significa</em> un carattere per risolvere uno schema. Un simbolo è un simbolo.",
+    "hero.p2": "Ma due, tre o quattro caselle partono ombreggiate e vuote. Completa lo schema, leggile in ordine e compongono una vera parola giapponese, costruita con i caratteri su cui hai appena passato venti minuti. Lo schema è la serratura. Il vocabolario è la ricompensa.",
+    "hero.p3": "Nessuno impara un carattere guardandolo. Lo si impara avendone bisogno, nove volte, in nove punti diversi, prima che lo schema si chiuda.",
+    "steps.label": "Come va uno schema",
+    "step1.num": "Prima",
+    "step1.h3": "Leggi la legenda",
+    "step1.p": "Ogni carattere dello schema è stampato sopra con le sue letture, il significato e il romaji. Non devi mai tornare indietro di una pagina per controllare qualcosa.",
+    "step2.num": "Poi",
+    "step2.h3": "Chiudi lo schema",
+    "step2.p": "Logica pura, sempre. Nessuno schema di questi libri richiede di tirare a indovinare, e nessuno richiede una tecnica oltre ai single nudi e nascosti.",
+    "step3.num": "Infine",
+    "step3.h3": "Leggi le caselle ombreggiate",
+    "step3.p": "Nell’ordine numerato compongono una parola. Scrivila nello spazio previsto, insieme alla lettura e al significato. Le soluzioni sono in fondo al libro, quindi tenta anche se non sei sicuro.",
+    "series.label": "La serie",
+    "series.h2": "Quattro volumi, una scala.",
+    "series.lede": "La serie parte dai livelli iniziali JLPT N5 e N4 e sale fino a N1, che raccoglie i 500 kanji più comuni di quel livello. Così impari i kanji in ordine di difficoltà e, dentro ogni livello, in base a quanto ricorrono davvero. Se si considera che i 1.000 kanji più frequenti, praticamente gli stessi 教育漢字 che i bambini giapponesi imparano alle elementari, coprono oltre il 90% del loro uso generale, di strada ne farai parecchia.",
+    "series.note": "I livelli sono ricavati dai dati di frequenza di KANJIDIC, e ogni libro lo dichiara nelle prime pagine: il JLPT non pubblica un elenco ufficiale di kanji dal 2010, quindi ogni elenco in circolazione è la ricostruzione di qualcuno.",
+    "langnote": "I libri sono scritti in inglese: i significati e le note di ogni carattere compaiono in inglese.",
+    "b1.lv": "Volume Uno · JLPT N5 e N4",
+    "b1.h3": "Da dove si comincia",
+    "b1.sub": "Sei riscaldamenti 4×4 aprono il libro. Gli schemi crescono fino a 6×6, 8×8 e un 9×9 pieno.",
+    "b1.pitch": "Aprilo il primo giorno. Gli schemi di riscaldamento non chiedono altro che riconoscere una configurazione, e ogni carattere che serve è definito nella pagina che hai davanti. Alla fine avrai maneggiato tutti i 246 caratteri dei due livelli iniziali, e scritto ciascuno più volte.",
+    "b1.squaresn": "3.791",
+    "b1.squares": "Caselle da riempire",
+    "b2.lv": "Volume Due · JLPT N3",
+    "b2.h3": "Il livello dove la gente si ferma",
+    "b2.sub": "Niente riscaldamenti. Gli schemi partono da 6×6 e arrivano al 9×9 pieno.",
+    "b2.pitch": "N3 è il muro intermedio. La grammatica che ti faceva sentire veloce è alle spalle, e quel che resta è vocabolario e kanji, che arrivano piano. Ogni consiglio si riduce ad altre flashcard. Qui ci sono 4.101 caselle di scrittura a mano che non sembrano scrittura a mano, e uno schema finito è finito in un modo in cui un mazzo di carte non lo è mai.",
+    "b2.all": "Kanji N3, tutti quanti",
+    "b3.lv": "Volume Tre · JLPT N2",
+    "b3.h3": "Il livello che conta",
+    "b3.sub": "Meno caselle date rispetto a entrambi i libri precedenti.",
+    "b3.pitch": "N5 è curiosità e N3 è un altopiano. N2 è quello che le aziende nominano in un annuncio di lavoro quando assumono dall’estero, e quello che due candidati su tre non passano. Tredici degli schemi nascondono un’espressione di quattro caratteri. Nessun altro libro di enigmistica sui kanji lo fa, perché nessuno ha un meccanismo in grado di reggerla.",
+    "b3.all": "Kanji N2, tutti quanti",
+    "b4.lv": "Volume Quattro · JLPT N1",
+    "b4.h3": "Il livello che non è facoltativo",
+    "b4.sub": "110 schemi, il numero più alto della serie, e sessanta di questi sono 9×9 pieni con meno caselle date che in qualsiasi altro punto di questi libri.",
+    "b4.pitch": "N2 è il livello che le aziende nominano. N1 è l’unico che è un requisito e non una preferenza: un medico o un infermiere abilitato all’estero ne ha bisogno prima di poter sostenere gli esami giapponesi, e lo supera meno di uno su tre. Circa duemila caratteri, cumulativi, che è il punto in cui imparare per logoramento smette di funzionare e avere bisogno di un carattere inizia a contare.",
+    "b4.top": "Kanji N1 più frequenti",
+    "b4.caveat": "In questo non ci sono pagine di esercizio di scrittura. Dà per scontato che tu sappia già scrivere, e spende quelle pagine in dieci schemi in più. Il ricalco è nei volumi da uno a tre. L’ordine dei tratti di tutti i 705 caratteri si può <a class='inline' data-strokes href='#'>scaricare gratis</a>.",
+    "kana.lv": "Kanadoku · Prima di Kanjidoku",
+    "kana.h3": "Il libro che viene prima",
+    "kana.sub": "Hiragana, poi katakana, poi tutti e due insieme.",
+    "kana.pitch": "Non te la senti ancora di togliere le rotelle? Ci pensa Kanadoku. Lo stesso meccanismo giocato con i kana, per chi un kanji non l’ha ancora incontrato. Si parte dagli hiragana e si passa poi ai katakana. Nella terza parte arrivano gli schemi che mescolano i due sillabari, dove il valore è il suono. Quindi due kana con lo stesso suono, come あ e ア, non possono stare sulla stessa riga.",
+    "kana.pending": "<i></i> In lavorazione",
+    "lbl.puzzles": "Schemi",
+    "lbl.kanji": "Kanji",
+    "lbl.pages": "Pagine",
+    "lbl.indexed": "Caratteri indicizzati",
+    "lbl.phrases": "Espressioni di quattro caratteri",
+    "lbl.kana": "Kana",
+    "lbl.parts": "Parti",
+    "free.label": "Gratis",
+    "free.h2": "Prova cinque schemi di uno qualsiasi.",
+    "free.lede": "Ogni estratto è di dodici pagine prese direttamente dal libro finito: come si gioca, il meccanismo della parola nascosta mostrato su uno schema vero, cinque schemi che salgono dal più piccolo fino a un 9×9 pieno, la soluzione e la nota di ciascuno dei cinque, e una pagina di esercizio di scrittura. Quello del Volume Quattro è di undici: quel libro non ha esercizi di scrittura da mostrare. Stampalo e risolvilo. Non ti si chiede nulla in cambio.",
+    "s1.h3": "Estratto del Volume Uno",
+    "s1.p": "Un riscaldamento 4×4, un 6×6, un jigsaw 5×5 e due 9×9 pieni. Apre con lo schema che compone 日本語 e chiude con 試験.",
+    "s2.h3": "Estratto del Volume Due",
+    "s2.p": "Un 6×6, un jigsaw 7×7, un 8×8 e due schemi 9×9 pieni, che chiudono con 初舞台.",
+    "s3.h3": "Estratto del Volume Tre",
+    "s3.p": "Un 6×6, un jigsaw 7×7, un 8×8 e due 9×9 pieni, compreso lo schema le cui quattro caselle ombreggiate nascondono 四捨五入.",
+    "s4.h3": "Estratto del Volume Quattro",
+    "s4.p": "Un 6×6, un 8×8, un jigsaw 7×7 e due 9×9 pieni, compreso lo schema che nasconde 新幹線.",
+    "s5.lv": "Kana",
+    "s5.h3": "Estratto di Kanadoku",
+    "s5.p": "Un 4×4 di apertura, un jigsaw 5×5, un 6×6 e due 9×9 pieni: uno tutto in katakana e uno che mescola i due sillabari. Chiude con こんにちは.",
+    "btn.coming": "<i></i> In arrivo",
+    "btn.dl": "Scarica il PDF",
+    "inside.label": "All’interno",
+    "inside.h2": "Uno schema per pagina, e un fondo del libro che serve davvero.",
+    "inside.lede": "Le due lamentele che tornano di continuo nelle recensioni dei quaderni di kanji sono che manca l’indice e manca la guida all’ordine dei tratti. Tutti i volumi indicizzano ogni carattere che contengono. L’ordine dei tratti, che prima stava stretto nelle caselle di esercizio, ha adesso un documento tutto suo e gratuito, uno per volume, dove si riesce davvero a leggerlo.",
+    "cap1": "Una pagina di schema: legenda, griglia, caselle di risposta",
+    "cap2": "Soluzioni, con una nota su ogni parola",
+    "cap3": "L’indice: ogni carattere, ogni schema",
+    "cap4": "Esercizio di scrittura, con un modello da ricalcare<span class=\"foot\">Solo nei volumi da uno a tre. Il volume quattro non ha una sezione di esercizio: spende quelle pagine in dieci schemi in più. L’ordine dei tratti di ogni carattere di ogni volume si può <a class='inline' data-strokes href='#'>scaricare gratis</a>.</span>",
+    "proof.label": "Perché puoi fidarti degli schemi",
+    "proof.h2": "Qui non è stato lasciato niente al caso.",
+    "proof.lede": "Ogni schema è dimostrato prima di arrivare in pagina. Tre di queste garanzie sono quelle che si sentono davvero mentre risolvi.",
+    "proof.li1": "<b>Una sola soluzione, sempre</b>C’è esattamente un modo di riempire ogni schema, e ci si arriva sempre per logica. Nessuno schema, in nessun volume, richiede di indovinare.",
+    "proof.li2": "<b>Ogni parola nascosta è reale</b>Ogni parola delle caselle ombreggiate è una che il giapponese usa davvero, stampata con la lettura che prende davvero, e lo stesso vale per ogni lettura di ogni legenda.",
+    "proof.li3": "<b>Nessun composto due volte</b>Nessuna parola nascosta viene riutilizzata come soluzione all’interno di un volume. Cento schemi vogliono dire cento parole diverse da portarsi via.",
+    "human.label": "Fatto da qualcuno che le ore le ha messe",
+    "human.p1": "Chi li ha creati ha vissuto dodici anni in Giappone e parla la lingua correntemente. Il che vuol dire anche dodici anni passati a sapere esattamente come ci si sente: caratteri cercati infinite volte che continuano a non restare, una parete tappezzata di schede di kanji scritte a mano, il punto in cui un libro di testo smette di essere un aiuto e diventa arredamento.",
+    "human.p2": "È tutta qui la ragione per cui questi libri funzionano così. Uno schema non ti chiede mai di memorizzare niente. Ti chiede di <em>usare</em> un carattere finché lo schema non si chiude, e poi ti consegna una parola per il disturbo.",
+    "human.p3": "È un ottimo complemento agli altri materiali di studio. Per questo sta accanto al tuo libro di testo invece di fargli concorrenza, ed è per questo che c’è chi ne finisce uno e ne comincia subito un altro.",
+    "strokes.line": "Anche le guide all’ordine dei tratti sono gratuite, una per volume: ogni carattere del libro disegnato in grande, con l’ordine in cui si traccia. <a class=\"inline\" data-strokes href=\"#\">Sono qui</a>.",
+    "footer.tag": "Libri di enigmi che ti lasciano qualcosa.",
+    "btn.buy": "Compra su Amazon",
+    "btn.soon": "<i></i> Presto su Amazon",
+    "btn.sample": "Schemi di prova gratis",
+    "btn.unavailable": "Estratto non disponibile qui",
+    "ui.preparing": "Preparazione…",
+    "ui.saved": "Salvato",
+    "ui.noSave": "Questa vista non consente di salvare file. Apri il link in un browser web e il download funzionerà.",
+    "ui.rate": "Un download alla volta. Riprova tra un momento.",
+    "ui.fail": "Quel download non è andato a buon fine. Riprova, oppure chiedimi il file direttamente."
+  },
+
+  ja: {
+    "strap": "解いたあとに、言葉が残る数独。",
+    "hero.gloss": "<b>にほんご &nbsp;nihongo</b>日本の言葉",
+    "hero.label": "しくみ",
+    "hero.h2": "解いて、言葉を持ち帰る。",
+    "hero.p1": "各行・各列・各ブロックに、それぞれの漢字がちょうど一つずつ。数独のルールはそのままです。漢字の<em>意味</em>を知らなくても解けます。記号は記号でしかありません。",
+    "hero.p2": "ただし、二つ・三つ・四つのマスは網かけのまま空いています。盤面を埋め、番号順に読むと、二十分向き合ってきた漢字でできた実在の日本語が現れます。パズルは錠前、語彙は報酬です。",
+    "hero.p3": "漢字は眺めて覚わるものではありません。盤面が閉じるまで、九か所で九回必要になる。そうやって身につきます。",
+    "steps.label": "パズルの流れ",
+    "step1.num": "まず",
+    "step1.h3": "字の一覧を読む",
+    "step1.p": "盤面に出てくる漢字は、読み・意味・ローマ字とともにページの上部に印刷されています。何かを調べるためにページを戻る必要はありません。",
+    "step2.num": "つぎに",
+    "step2.h3": "盤面を埋める",
+    "step2.p": "つねに純粋な論理だけ。どの巻のどのパズルも当て推量を必要とせず、単独候補と隠れ単独を超える技法も要りません。",
+    "step3.num": "そして",
+    "step3.h3": "網かけのマスを読む",
+    "step3.p": "番号順に読むと言葉になります。読みと意味をそえて、所定の欄に書き込んでください。答えは巻末にありますので、自信がなくてもまず書いてみてください。",
+    "series.label": "シリーズ",
+    "series.h2": "四巻、ひとつの階段。",
+    "series.lede": "シリーズは入門のJLPT N5・N4から始まり、そのレベルで最もよく使われる500字を収めたN1まで積み上がります。漢字を難易度の順に、そして各レベルのなかでは実際の使用頻度の順に学べるということです。頻度上位1,000字、日本の小学生が習う「教育漢字」とほぼ重なる範囲だけで一般的な使用の9割以上がまかなえることを考えれば、ずいぶん先まで進めるはずです。",
+    "series.note": "各巻のレベルの区分はKANJIDICの頻度データに基づいており、そのことは巻頭に明記しています。JLPTは2010年以降、公式の漢字表を公表していません。出回っている表はすべて誰かの再構成です。",
+    "langnote": "本文は英語です。各漢字の意味や解説は英語で書かれています。",
+    "b1.lv": "第一巻 · JLPT N5・N4",
+    "b1.h3": "ここから始める",
+    "b1.sub": "4×4のウォームアップ六題で始まり、6×6、8×8、そして9×9へ。",
+    "b1.pitch": "初日から開けます。ウォームアップはパターンを見分けるだけ。必要な漢字はすべて同じページ上に説明されています。読み終える頃には、初級二レベルの246字すべてに触れ、そのひとつひとつを何度も書いています。",
+    "b1.squaresn": "3,791",
+    "b1.squares": "書き込むマス",
+    "b2.lv": "第二巻 · JLPT N3",
+    "b2.h3": "多くの人が止まるところ",
+    "b2.sub": "ウォームアップなし。6×6から始まり9×9まで。",
+    "b2.pitch": "N3は中級の壁です。上達を実感できた文法は後ろに過ぎ、残るのは語彙と漢字。しかも進みは遅い。助言はどれも「もっとカードを回せ」に行き着きます。本書は手書きに見えない手書き4,101マス。そして埋まった盤面は、カードの束が決してならない意味で「終わって」います。",
+    "b2.all": "N3漢字、全字",
+    "b3.lv": "第三巻 · JLPT N2",
+    "b3.h3": "効いてくるレベル",
+    "b3.sub": "前の二巻より与えられるマスが少ない。",
+    "b3.pitch": "N5は好奇心、N3は停滞期。N2は外国人を採用する求人票に書かれるレベルであり、三人に二人が落ちるレベルです。十三題は四字熟語を隠します。ほかの漢字パズル本にはできません。それを支えられるしくみを持っていないからです。",
+    "b3.all": "N2漢字、全字",
+    "b4.lv": "第四巻 · JLPT N1",
+    "b4.h3": "選べないレベル",
+    "b4.sub": "シリーズ最多の110題。うち六十題は9×9で、与えられるマスは全巻でもっとも少なめです。",
+    "b4.pitch": "N2が求人票のレベルなら、N1は好みではなく要件になる唯一のレベルです。海外で資格を得た医師や看護師は、日本の国家試験を受けるためにこれを求められます。合格するのは三割に届きません。累計でおよそ二千字。消耗戦で覚えるやり方が通用しなくなり、「必要になること」が効き始める地点です。",
+    "b4.top": "頻度上位のN1漢字",
+    "b4.caveat": "この巻に書き取り練習のページはありません。すでに書けることを前提に、その分をパズル十題に充てています。なぞり書きは第一巻から第三巻に入っています。705字すべての筆順は<a class='inline' data-strokes href='#'>無料でダウンロードできます</a>。",
+    "kana.lv": "Kanadoku · Kanjidoku の前に",
+    "kana.h3": "その前に読む一冊",
+    "kana.sub": "ひらがな、つぎにカタカナ、最後に両方いっしょに。",
+    "kana.pitch": "補助輪を外すのはまだ早い、という方には Kanadoku があります。まだ漢字に出会っていない読者のために、同じしくみをかなで。まずはひらがな、つぎにカタカナへ。第三部では両方の字種が混ざる盤面に進みます。値になるのは音なので、「あ」と「ア」のように同じ音のかなは同じ行に入れません。",
+    "kana.pending": "<i></i> 制作中",
+    "lbl.puzzles": "パズル",
+    "lbl.kanji": "漢字",
+    "lbl.pages": "ページ",
+    "lbl.indexed": "索引の収録字数",
+    "lbl.phrases": "四字熟語",
+    "lbl.kana": "かな",
+    "lbl.parts": "部",
+    "free.label": "無料",
+    "free.h2": "どの巻も五題ずつ試せます。",
+    "free.lede": "見本はどれも、完成した本からそのまま抜き出した十二ページです。遊び方、実際の盤面で示す隠し言葉のしくみ、小さい盤から9×9まで上がっていく五題、その五題それぞれの解答と解説、そして書き取り練習が一ページ。第四巻の見本は十一ページです。あの巻には見本にできる書き取りのページがありません。印刷して解いてください。見返りは何も求めません。",
+    "s1.h3": "第一巻の見本",
+    "s1.p": "4×4のウォームアップ、6×6、5×5の変則盤、そして9×9が二題。日本語を綴る盤面で始まり、試験で終わります。",
+    "s2.h3": "第二巻の見本",
+    "s2.p": "6×6、7×7の変則盤、8×8、そして9×9が二題。最後は初舞台。",
+    "s3.h3": "第三巻の見本",
+    "s3.p": "6×6、7×7の変則盤、8×8、そして9×9が二題。四つの網かけマスに四捨五入が隠れた盤面を含みます。",
+    "s4.h3": "第四巻の見本",
+    "s4.p": "6×6、8×8、7×7の変則盤、そして9×9が二題。新幹線が隠れた盤面を含みます。",
+    "s5.lv": "かな",
+    "s5.h3": "Kanadoku の見本",
+    "s5.p": "4×4の最初の一題、5×5の変則盤、6×6、そして9×9が二題。ひとつはカタカナだけ、もうひとつは両方の字種が混ざります。最後はこんにちは。",
+    "btn.coming": "<i></i> 近日公開",
+    "btn.dl": "PDFをダウンロード",
+    "inside.label": "中身",
+    "inside.h2": "一ページに一題、そして役に立つ巻末。",
+    "inside.lede": "漢字ドリルのレビューで繰り返し挙がる不満は二つ、索引がないことと筆順の案内がないことです。全巻が収録字すべてを索引に載せています。筆順は練習マスに詰め込むのをやめ、巻ごとに一冊の無料の別冊にまとめました。そこでなら十分に読める大きさです。",
+    "cap1": "パズルのページ：字の一覧、盤面、解答欄",
+    "cap2": "解答と、言葉ごとの解説",
+    "cap3": "索引：すべての字、すべての題",
+    "cap4": "書き取り練習、なぞるための手本つき<span class=\"foot\">第一巻から第三巻のみ。第四巻に練習のページはなく、その分をパズル十題に充てています。全巻の収録字すべての筆順は<a class='inline' data-strokes href='#'>無料でダウンロードできます</a>。</span>",
+    "proof.label": "盤面を信用できる理由",
+    "proof.h2": "偶然に任せたところはありません。",
+    "proof.lede": "どの盤面もページに載る前に検証されています。解いている最中に実感できるのは、次の三つです。",
+    "proof.li1": "<b>解は必ずひとつ</b>どの盤面も埋め方はただ一通りで、必ず論理だけでたどり着けます。どの巻のどの題も当て推量を必要としません。",
+    "proof.li2": "<b>隠された言葉はすべて実在する</b>網かけのマスから現れる語はいずれも日本語で実際に使われる語で、実際にその語が取る読みとともに印刷されています。字の一覧に載るすべての読みも同じです。",
+    "proof.li3": "<b>同じ熟語は二度出ない</b>同じ巻のなかで、隠し言葉が答えとして再登場することはありません。百題は、持ち帰れる百の言葉です。",
+    "human.label": "時間をかけた人がつくっています",
+    "human.p1": "制作者は日本に十二年暮らし、日本語を不自由なく話します。それは同時に、あの感覚を十二年知っているということでもあります。何度引いてもまだ定着しない字。手書きの漢字カードで埋め尽くされた壁。参考書が助けではなく家具になる瞬間。",
+    "human.p2": "これらの本がこういう作りになっているのは、そのためです。盤面は暗記を求めません。盤面が閉じるまで漢字を<em>使う</em>ことを求め、その手間の代わりに言葉を一つ渡します。",
+    "human.p3": "ほかの教材と併せて使うのにちょうどよい一冊です。だから参考書と張り合うのではなく、その隣に置けます。一冊終えるとつぎの一冊に進む人が多いのも、そのためです。",
+    "strokes.line": "筆順の一覧も無料です。巻ごとに一冊、収録字をすべて大きく、書く順番つきで。<a class=\"inline\" data-strokes href=\"#\">こちらから</a>。",
+    "footer.tag": "何かが残るパズルブックを。",
+    "btn.buy": "Amazonで買う",
+    "btn.soon": "<i></i> Amazonで近日公開",
+    "btn.sample": "無料の見本パズル",
+    "btn.unavailable": "この画面では保存できません",
+    "ui.preparing": "準備中…",
+    "ui.saved": "保存しました",
+    "ui.noSave": "この表示ではファイルを保存できません。リンクをブラウザで開くとダウンロードできます。",
+    "ui.rate": "ダウンロードは一度に一つです。少し待ってからもう一度お試しください。",
+    "ui.fail": "ダウンロードできませんでした。もう一度試すか、ファイルを直接お求めください。"
+  }
+};
+
+/* ------------------------------------------------------------------
+   Paste an Amazon URL here when a book goes live and its Buy button
+   turns on by itself. Leave a value empty and the book shows as
+   "Coming to Amazon" instead, in whichever language is on screen.
+------------------------------------------------------------------ */
+const AMAZON = {
+  vol1: "https://www.amazon.com/dp/B0HKYGP2TP",   // Kanjidoku, Volume One (N5 & N4)
+  n3:   "https://www.amazon.com/dp/B0HKYD525C",   // Kanjidoku N3
+  n2:   "https://www.amazon.com/dp/B0HKY7G1JL",   // Kanjidoku N2
+  n1:   "https://www.amazon.com/dp/B0HKYD9RTV",   // Kanjidoku N1
+  kana: "https://www.amazon.com/dp/B0HL4ZLSV3"    // Kanadoku
+};
+
+/* ------------------------------------------------------------------
+   Where the free samplers live. Leave a slot empty and that sampler
+   is handed over by the viewer instead, which only works where the
+   viewer allows saving. Put a public direct-download URL in and the
+   button becomes an ordinary link that works on any device.
+------------------------------------------------------------------ */
+const SAMPLES = {
+  vol1: "https://drive.google.com/uc?export=download&id=1m1H-hiJBzyvSHXfdX3OG-toclQb8G4LI",
+  n3:   "https://drive.google.com/uc?export=download&id=1CcK8VbGguJhmEhUiB1XrKiY266dOhBA0",
+  n2:   "https://drive.google.com/uc?export=download&id=1BTY9dFzi2l4_-amCfEE9SuVmQ_QMI_lF",
+  n1:   "https://drive.google.com/uc?export=download&id=1dvCyfaU26FetDLSxovG3qWhy1GCLFzwj",
+  kana: "https://drive.google.com/uc?export=download&id=1sESlaEtZzAtlnY-3nr0kSCcd8KvxVrq_"
+};
+
+const SAMPLE_FILE = {
+  vol1: "kanjidoku-vol1-N5.N4-sampler.pdf",
+  n3: "kanjidoku-vol2-N3-sampler.pdf",
+  n2: "kanjidoku-vol3-N2-sampler.pdf",
+  n1: "kanjidoku-vol4-N1-sampler.pdf",
+  kana: "kanadoku-sampler.pdf"
+};
+
+/* Where the stroke-order page lives. On kanjidoku.net this becomes "/strokes". */
+const STROKES = "/strokes/";
+
+function wireStrokeLinks() {
+  document.querySelectorAll("a[data-strokes]").forEach(function (a) {
+    a.href = STROKES;
+    a.target = "_blank";
+    a.rel = "noopener";
+  });
+}
+
+/* ---- language ---- */
+const original = new Map();
+document.querySelectorAll("[data-i18n]").forEach(function (el) {
+  if (!original.has(el)) original.set(el, el.innerHTML);
+});
+
+let lang = document.documentElement.getAttribute("data-lang") || "en";
+
+Object.assign(STRINGS.en, EN_MARKUP);
+
+function t(key) {
+  const table = STRINGS[lang] || {};
+  if (table[key] != null) return table[key];
+  return (STRINGS.en && STRINGS.en[key]) || "";
+}
+
+function applyLang(code) {
+  lang = (code === "en" || STRINGS[code]) ? code : "en";
+  const table = STRINGS[lang] || {};
+  document.querySelectorAll("[data-i18n]").forEach(function (el) {
+    const key = el.dataset.i18n;
+    const value = table[key];
+    el.innerHTML = value != null ? value
+      : (STRINGS.en[key] != null ? STRINGS.en[key] : original.get(el));
+  });
+  const root = document.documentElement;
+  root.setAttribute("lang", lang);
+  root.setAttribute("data-lang", lang);
+  document.querySelectorAll("#langs [data-lang]").forEach(function (b) {
+    b.setAttribute("aria-pressed", String(b.dataset.lang === lang));
+  });
+  try { localStorage.setItem("kanjidoku.lang", lang); } catch (e) {}
+  wireStrokeLinks();
+}
+
+const PATHS = {
+  "en": "/",
+  "es": "/es/",
+  "it": "/it/",
+  "ja": "/ja/"
+};
+
+/* The links are real: without JS they navigate, and a crawler follows them.
+   With JS they swap the text in place and push the sibling URL, so the
+   address bar and the language on screen never disagree. */
+document.querySelectorAll("#langs a[data-lang]").forEach(function (a) {
+  a.addEventListener("click", function (e) {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+    e.preventDefault();
+    const code = a.dataset.lang;
+    applyLang(code);
+    try { history.pushState({ lang: code }, "", PATHS[code]); } catch (err) {}
+  });
+});
+
+window.addEventListener("popstate", function () {
+  const here = location.pathname.replace(/\/+$/, "/") || "/";
+  let code = "en";
+  Object.keys(PATHS).forEach(function (k) { if (PATHS[k] === here) code = k; });
+  applyLang(code);
+});
+
+applyLang(document.documentElement.getAttribute("data-lang") || "en");
+</script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en" data-lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Not here — Kanjidoku</title>
+<meta name="description" content="That page does not exist on kanjidoku.net.">
+<link rel="canonical" href="https://kanjidoku.net/404.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Kanjidoku">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Not here — Kanjidoku">
+<meta property="og:description" content="That page does not exist on kanjidoku.net.">
+<meta property="og:url" content="https://kanjidoku.net/404.html">
+<meta property="og:image" content="https://kanjidoku.net/og/card-en.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="A Kanjidoku grid with three shaded cells spelling 日本語.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#fcfbf8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#141519" media="(prefers-color-scheme: dark)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap">
+<style>
+:root{
+  --paper:#fcfbf8;
+  --raise:#ffffff;
+  --ink:#111111;
+  --ink-soft:#4a4842;
+  --muted:#77746b;
+  --rule:#dedbd3;
+  --rule-soft:#eceae4;
+  --shade:#f1efe9;
+  --n5:#3573bc; --n4:#45a099; --n3:#88c029; --n2:#fa9716; --n1:#eb2b92; --kana:#9d4bd7;
+  --n5-ink:#2a5b94; --n4-ink:#367c77; --n3-ink:#5c8320; --n2-ink:#b26708; --n1-ink:#cf1478;
+  --focus:#3573bc;
+  --shadow:0 1px 2px rgba(17,17,17,.05), 0 8px 24px -14px rgba(17,17,17,.28);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#141519; --raise:#1b1d22; --ink:#eeece6; --ink-soft:#bcb9b1; --muted:#8d8a82;
+    --rule:#33353c; --rule-soft:#25272d; --shade:#22242a;
+    --n5:#558dcf; --n4:#5ebab3; --n3:#a1d745; --n2:#fbad48; --n1:#ef5aaa; --kana:#aa5ce8;
+    --n5-ink:#8fb6e2; --n4-ink:#8ad1cb; --n3-ink:#b9e274; --n2-ink:#fcc47a; --n1-ink:#f487c1;
+    --focus:#8fb6e2;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -16px rgba(0,0,0,.8);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#141519; --raise:#1b1d22; --ink:#eeece6; --ink-soft:#bcb9b1; --muted:#8d8a82;
+  --rule:#33353c; --rule-soft:#25272d; --shade:#22242a;
+  --n5:#558dcf; --n4:#5ebab3; --n3:#a1d745; --n2:#fbad48; --n1:#ef5aaa; --kana:#aa5ce8;
+  --n5-ink:#8fb6e2; --n4-ink:#8ad1cb; --n3-ink:#b9e274; --n2-ink:#fcc47a; --n1-ink:#f487c1;
+  --focus:#8fb6e2;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -16px rgba(0,0,0,.8);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:"Source Serif 4","Iowan Old Style",Georgia,serif;
+  font-size:17px; line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+.jp,.disp,h1,h2,h3,.label,.btn,.spec{font-family:"Zen Kaku Gothic New","Hiragino Kaku Gothic ProN","Noto Sans JP",system-ui,sans-serif}
+
+.wrap{max-width:1000px; margin:0 auto; padding:0 28px}
+.measure{max-width:63ch}
+hr.rule{border:0; border-top:1px solid var(--rule); margin:0}
+section{padding:56px 0}
+
+.label{
+  font-size:11.5px; font-weight:700; letter-spacing:.16em; text-transform:uppercase;
+  color:var(--muted); margin:0 0 18px;
+}
+h1{font-size:clamp(40px,7.5vw,68px); font-weight:900; letter-spacing:-.02em; line-height:1.02; margin:0; text-wrap:balance}
+h2{font-size:clamp(24px,3.4vw,32px); font-weight:700; letter-spacing:-.015em; line-height:1.15; margin:0 0 14px; text-wrap:balance}
+h3{font-size:19px; font-weight:700; letter-spacing:-.01em; margin:0 0 6px}
+p{margin:0 0 16px}
+p:last-child{margin-bottom:0}
+strong{font-weight:600}
+a{color:inherit}
+a.inline{
+  color:inherit; text-decoration:underline; text-underline-offset:2px;
+  text-decoration-thickness:1px; text-decoration-color:var(--rule);
+}
+a.inline:hover{text-decoration-color:var(--ink)}
+
+/* ---------- masthead ---------- */
+.masthead{padding:34px 0 30px; display:flex; flex-direction:column; gap:22px}
+.imprint{display:flex; align-items:baseline; gap:10px; font-family:"Zen Kaku Gothic New",sans-serif;
+  font-size:11.5px; font-weight:700; letter-spacing:.2em; text-transform:uppercase; color:var(--muted)}
+.imprint .dot{width:5px;height:5px;border-radius:50%;background:var(--n2);display:inline-block;transform:translateY(-2px)}
+.title-row{display:flex; align-items:flex-end; gap:20px; flex-wrap:wrap}
+.strap{font-size:19px; font-style:italic; color:var(--ink-soft); margin:0}
+.ladder{display:flex; gap:4px; margin-top:4px}
+.ladder span{height:5px; width:44px; border-radius:2px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="masthead">
+    <div class="topbar"><div class="imprint"><span class="dot"></span> Mind Quests</div></div>
+    <div><h1>Not here</h1>
+    <p class="strap">That page does not exist.</p></div>
+  </header>
+  <section><p class="measure">Try <a class="inline" href="/">the books</a>, or <a class="inline" href="/strokes/">the stroke-order downloads</a>.</p></section>
+</div>
+<script>
+/* nothing to run */
+</script>
+</body>
+</html>
