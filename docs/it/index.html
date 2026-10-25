@@ -573,12 +573,7 @@ footer .mark{font-family:"Zen Kaku Gothic New",sans-serif; font-weight:700; lett
    so only the other three languages are listed here. A key that is
    missing from a language falls back to the English in the page.
 ------------------------------------------------------------------ */
-const LANGS = [
-  { code: "en", label: "EN",   name: "English" },
-  { code: "es", label: "ES",   name: "Español" },
-  { code: "it", label: "IT",   name: "Italiano" },
-  { code: "ja", label: "日本語", name: "日本語" }
-];
+
 
 const EN_MARKUP = {
   "strap": "Sudoku that leaves you with a word.",
@@ -1000,13 +995,7 @@ const STRINGS = {
    turns on by itself. Leave a value empty and the book shows as
    "Coming to Amazon" instead, in whichever language is on screen.
 ------------------------------------------------------------------ */
-const AMAZON = {
-  vol1: "https://www.amazon.com/dp/B0HKYGP2TP",   // Kanjidoku, Volume One (N5 & N4)
-  n3:   "https://www.amazon.com/dp/B0HKYD525C",   // Kanjidoku N3
-  n2:   "https://www.amazon.com/dp/B0HKY7G1JL",   // Kanjidoku N2
-  n1:   "https://www.amazon.com/dp/B0HKYD9RTV",   // Kanjidoku N1
-  kana: "https://www.amazon.com/dp/B0HL4ZLSV3"    // Kanadoku
-};
+
 
 /* ------------------------------------------------------------------
    Where the free samplers live. Leave a slot empty and that sampler
@@ -1014,21 +1003,9 @@ const AMAZON = {
    viewer allows saving. Put a public direct-download URL in and the
    button becomes an ordinary link that works on any device.
 ------------------------------------------------------------------ */
-const SAMPLES = {
-  vol1: "https://drive.google.com/uc?export=download&id=1m1H-hiJBzyvSHXfdX3OG-toclQb8G4LI",
-  n3:   "https://drive.google.com/uc?export=download&id=1CcK8VbGguJhmEhUiB1XrKiY266dOhBA0",
-  n2:   "https://drive.google.com/uc?export=download&id=1BTY9dFzi2l4_-amCfEE9SuVmQ_QMI_lF",
-  n1:   "https://drive.google.com/uc?export=download&id=1dvCyfaU26FetDLSxovG3qWhy1GCLFzwj",
-  kana: "https://drive.google.com/uc?export=download&id=1sESlaEtZzAtlnY-3nr0kSCcd8KvxVrq_"
-};
-
-const SAMPLE_FILE = {
-  vol1: "kanjidoku-vol1-N5.N4-sampler.pdf",
-  n3: "kanjidoku-vol2-N3-sampler.pdf",
-  n2: "kanjidoku-vol3-N2-sampler.pdf",
-  n1: "kanjidoku-vol4-N1-sampler.pdf",
-  kana: "kanadoku-sampler.pdf"
-};
+/* The samplers and the supplements are files in this repo now. Their
+   names and paths live in build_site.py (SAMPLERS, SUPPLEMENTS),
+   which writes the download links straight into the markup. */
 
 /* Where the stroke-order page lives. On kanjidoku.net this becomes "/strokes". */
 const STROKES = "/strokes/";

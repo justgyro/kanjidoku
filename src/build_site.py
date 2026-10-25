@@ -115,7 +115,7 @@ SUPPLEMENTS = [
     "kanjidoku-vol2-N3-strokes.pdf",
     "kanjidoku-vol3-N2-strokes.pdf",
     "kanjidoku-vol4-N1-strokes.pdf",
-    "kanadoku-strokes.pdf",
+    "kanadoku-strokes-v2.pdf",
 ]
 
 
@@ -306,6 +306,19 @@ def build_main():
     # ---- so the buttons are plain links written into the markup above
     script = cut(script, "function sampleUrl(key)",
                  "/* ---- language ---- */", "download plumbing")
+
+    # ---- and so does the config it used. AMAZON, SAMPLES and SAMPLE_FILE
+    # ---- are read at build time and written into the markup as anchors;
+    # ---- leaving them in the page shipped dead code, and the stale Drive
+    # ---- URLs in SAMPLES read as though that were still where downloads
+    # ---- came from. LANGS goes for the same reason: the switcher is markup.
+    for name in ("LANGS", "AMAZON", "SAMPLES", "SAMPLE_FILE"):
+        if ("const %s = " % name) not in script:
+            continue
+        i = script.index("const %s = " % name)
+        opener = script[i + len("const %s = " % name)]     # '[' or '{'
+        closer = "\n];" if opener == "[" else "\n};"
+        script = script[:i] + script[script.index(closer, i) + len(closer):]
     script = cut(script, "/* ---- downloads ------", None, "downloads block")
     for dead in ("  if (typeof refreshDownloadLabels === \"function\") refreshDownloadLabels();\n",):
         script = once(script, dead, "", "dead call")

@@ -161,36 +161,38 @@ __CORE_CSS__
 ------------------------------------------------------------------ */
 const HOME = "__HOME__";
 
-/* Each supplement. An empty url renders the row as still to come. */
+/* Each supplement. build_site.py reads this list, then writes the rows
+   into the markup and takes each file's page count and size off the PDF
+   itself, so nothing here can claim a number the file does not have. */
 const SUPPLEMENTS = [
   { key: "vol1", colour: "var(--n5)", volume: "Volume One", level: "JLPT N5 &amp; N4",
     chars: 246, pages: 32, size: "0.6 MB",
     file: "kanjidoku-vol1-N5.N4-strokes.pdf",
-    url: "https://drive.google.com/uc?export=download&id=1Kyln3gbkqRFbXM-W6co75t8LvYmIXv0o",
+    url: "/strokes/kanjidoku-vol1-N5.N4-strokes.pdf",
     note: "The characters run in the same order as the writing practice at the back of the book, so the two can sit side by side." },
 
   { key: "vol2", colour: "var(--n3)", volume: "Volume Two", level: "JLPT N3",
     chars: 497, pages: 60, size: "1.1 MB",
     file: "kanjidoku-vol2-N3-strokes.pdf",
-    url: "https://drive.google.com/uc?export=download&id=1MOS5dx91NwXFWHZrXZCEZvosL3FaUxXT",
+    url: "/strokes/kanjidoku-vol2-N3-strokes.pdf",
     note: "Every character in the book, including the easier ones carried over from Volume One, which the practice section does not drill." },
 
   { key: "vol3", colour: "var(--n2)", volume: "Volume Three", level: "JLPT N2",
     chars: 562, pages: 67, size: "1.2 MB",
     file: "kanjidoku-vol3-N2-strokes.pdf",
-    url: "https://drive.google.com/uc?export=download&id=1V8A2eq-E0Z7LXIoQRBZyfHtIZ9alF59d",
+    url: "/strokes/kanjidoku-vol3-N2-strokes.pdf",
     note: "Every character in the book, including the earlier levels borrowed where a theme wanted one." },
 
   { key: "vol4", colour: "var(--n1)", volume: "Volume Four", level: "JLPT N1",
     chars: 705, pages: 83, size: "1.5 MB",
     file: "kanjidoku-vol4-N1-strokes.pdf",
-    url: "https://drive.google.com/uc?export=download&id=14rVyFUEENf8OMvOy_RNR_uU0s4stmDXW",
+    url: "/strokes/kanjidoku-vol4-N1-strokes.pdf",
     note: "Volume Four has no writing-practice pages: it spent them on ten more puzzles. This is where its stroke orders live, and it is the volume this matters most to." },
 
   { key: "kana", colour: "var(--kana)", volume: "Kanadoku", level: "Hiragana &amp; katakana",
     chars: 92, pages: 16, size: "0.6 MB",
-    file: "kanadoku-strokes.pdf",
-    url: "https://drive.google.com/uc?export=download&id=1SojcDsquDdXOKvPbBg_Cd1rcWvpf0HDM",
+    file: "kanadoku-strokes-v2.pdf",
+    url: "/strokes/kanadoku-strokes-v2.pdf",
     note: "Every kana in both alphabets, with the marks that change a sound and the long bar. Kanadoku's own practice pages gave up their models, because at 40pt nobody could read the numbers." }
 ];
 
